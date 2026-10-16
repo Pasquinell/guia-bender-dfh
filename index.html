@@ -1,0 +1,973 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Dos casos resueltos de Bender-Koppitz y DFH paso a paso, más la teoría del WISC-V, para preparar el parcial.">
+<title>Bender, DFH y WISC-V</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=JetBrains+Mono:wght@400;600&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&family=Schibsted+Grotesk:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+/* Layout: protocolo de corrección. Lámina dibujada a lápiz fija a la izquierda (sticky); a la derecha, la corrección paso a paso con lápiz rojo (evolutivo) y azul (emocional). */
+:root{
+  --paper:#F2F4F1; --sheet:#FFFFFF; --ink:#1E2327; --graphite:#2E3338; --muted:#5C646B; --rule:#D3D9D2; --soft:#E6EBE5;
+  --red:#BF3328; --blue:#2155A6; --green:#2A7648; --amber:#8E6200;
+  --red-bg:#F7E2DE; --blue-bg:#E0E9F7; --green-bg:#DEEFE3; --amber-bg:#F5ECD6;
+  --f-display:"Schibsted Grotesk","Helvetica Neue",Arial,sans-serif;
+  --f-body:"Literata",Georgia,"Times New Roman",serif;
+  --f-hand:"Caveat","Comic Sans MS","Segoe Print",cursive;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#101315; --sheet:#1A1E21; --ink:#E6E9E7; --graphite:#D8DCDF; --muted:#9AA2A9; --rule:#2D3438; --soft:#1F2528;
+  --red:#FF7568; --blue:#88AEFF; --green:#63CF8F; --amber:#E2B34E;
+  --red-bg:#3A1E1B; --blue-bg:#1B2640; --green-bg:#16301F; --amber-bg:#352A12; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#101315; --sheet:#1A1E21; --ink:#E6E9E7; --graphite:#D8DCDF; --muted:#9AA2A9; --rule:#2D3438; --soft:#1F2528;
+  --red:#FF7568; --blue:#88AEFF; --green:#63CF8F; --amber:#E2B34E;
+  --red-bg:#3A1E1B; --blue-bg:#1B2640; --green-bg:#16301F; --amber-bg:#352A12; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.62;margin:0}
+.wrap{max-width:1200px;margin-inline:auto;padding-inline:20px}
+h1,h2,h3,h4{font-family:var(--f-display);line-height:1.12;text-wrap:balance;margin:0;font-weight:800;letter-spacing:-.01em}
+h2{font-size:clamp(28px,4vw,44px)}
+h3{font-size:clamp(21px,2.4vw,27px);font-weight:700}
+h4{font-size:19px;font-weight:700}
+p{margin:0 0 .75em}
+a{color:var(--blue)}
+a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--blue);outline-offset:3px;border-radius:4px}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.hand{font-family:var(--f-hand);font-size:1.25em;line-height:1.1}
+.r{color:var(--red)} .b{color:var(--blue)} .g{color:var(--green)}
+.measure{max-width:68ch}
+small,.small{font-size:14px;color:var(--muted)}
+
+/* Hero */
+.hero{padding-block:56px 28px;display:grid;gap:28px}
+.hero h1{font-size:clamp(40px,7vw,84px);font-weight:800;letter-spacing:-.03em}
+.hero h1 span{color:var(--red)}
+.hero .lede{font-size:19px;max-width:62ch}
+.cards{display:grid;grid-template-columns:repeat(9,minmax(0,1fr));gap:8px}
+.cards figure{margin:0;background:var(--sheet);border:1px solid var(--rule);border-radius:4px;padding:8px 6px 4px;display:flex;flex-direction:column;align-items:center;gap:2px;aspect-ratio:1.45/1}
+.cards svg{width:100%;height:100%;min-height:0;flex:1}
+.cards figcaption{font-family:var(--f-mono);font-size:11px;color:var(--muted)}
+@media (max-width:720px){.cards{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.toc{display:flex;flex-wrap:wrap;gap:8px}
+.toc a{font-family:var(--f-display);font-weight:700;font-size:15px;text-decoration:none;color:var(--ink);border:1px solid var(--rule);background:var(--sheet);padding:7px 13px;border-radius:999px}
+.toc a:hover{border-color:var(--ink)}
+
+/* Sections */
+section.block{padding-block:56px;border-top:1px solid var(--rule)}
+.sec-head{display:grid;gap:10px;margin-bottom:28px}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+@media (max-width:860px){.grid2,.grid3{grid-template-columns:1fr}}
+.panel{background:var(--sheet);border:1px solid var(--rule);border-radius:8px;padding:20px 22px;min-width:0}
+.panel h4{margin-bottom:8px}
+.panel ul,.panel ol{margin:0;padding-left:1.15em}
+.panel li{margin-bottom:.35em}
+.reading{border-left:3px solid var(--rule);padding-left:14px}
+.reading.r{border-color:var(--red)} .reading.b{border-color:var(--blue)} .reading.k{border-color:var(--ink)}
+.reading p{color:var(--ink)}
+.rule-box{background:var(--amber-bg);border:1px solid var(--amber);border-radius:8px;padding:16px 20px}
+.rule-box h4{color:var(--amber)}
+
+/* Case header */
+.case-head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:28px}
+.case-head h2 em{font-style:normal;color:var(--muted);font-weight:500}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-family:var(--f-mono);font-size:12.5px;padding:4px 10px;border-radius:999px;border:1px solid var(--rule);background:var(--sheet);white-space:nowrap}
+.chip.red{background:var(--red-bg);border-color:transparent;color:var(--red)}
+.chip.blue{background:var(--blue-bg);border-color:transparent;color:var(--blue)}
+.chip.green{background:var(--green-bg);border-color:transparent;color:var(--green)}
+.part-title{display:flex;gap:12px;align-items:baseline;margin:48px 0 18px}
+.part-title .eyebrow{flex:none}
+
+/* Interview */
+.interview{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:24px}
+@media (max-width:860px){.interview{grid-template-columns:1fr}}
+.transcript{background:var(--sheet);border:1px solid var(--rule);border-radius:8px;padding:22px 24px}
+.transcript .meta{display:grid;grid-template-columns:auto 1fr;gap:2px 14px;font-size:15px;margin-bottom:16px;padding-bottom:14px;border-bottom:1px dashed var(--rule)}
+.transcript .meta dt{font-family:var(--f-mono);font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);padding-top:3px}
+.transcript .meta dd{margin:0}
+.line{display:grid;grid-template-columns:34px 1fr;gap:10px;margin-bottom:9px}
+.line .who{font-family:var(--f-mono);font-size:12px;font-weight:600;color:var(--muted);padding-top:4px}
+.line.t .txt{color:var(--muted);font-style:italic}
+.obs{margin-top:16px;padding-top:14px;border-top:1px dashed var(--rule)}
+.obs h4{font-size:16px;margin-bottom:6px}
+mark{background:var(--amber-bg);color:inherit;padding:0 2px;border-radius:2px}
+.clues{display:grid;gap:10px;align-content:start}
+.clue{background:var(--sheet);border:1px solid var(--rule);border-radius:8px;padding:12px 14px;font-size:15.5px}
+.clue .tag{display:inline-block;margin-bottom:4px}
+
+/* Scrolly */
+.scrolly{display:grid;grid-template-columns:minmax(0,1.12fr) minmax(0,1fr);gap:36px;position:relative}
+.stage{position:sticky;top:calc(env(safe-area-inset-top,0px) + 10px);height:calc(100vh - 20px);display:flex;flex-direction:column;gap:8px;padding-block:6px}
+.stage .hud{display:flex;flex-wrap:wrap;gap:6px}
+.stage .hud .chip b{font-weight:600}
+.stage .board{flex:1;min-height:0;background:var(--soft);border:1px solid var(--rule);border-radius:8px;overflow:hidden;position:relative}
+.stage svg.sheetsvg{width:100%;height:100%;display:block}
+.stage .cap{font-size:12.5px;color:var(--muted);font-family:var(--f-mono)}
+.steps{padding-block:12vh 30vh}
+.step{min-height:78vh;display:flex;align-items:center}
+.step:first-child{min-height:60vh;align-items:flex-start}
+.step .card{background:var(--sheet);border:1px solid var(--rule);border-radius:8px;padding:20px 22px;width:100%;transition:border-color .3s, box-shadow .3s}
+.step.is-active .card{border-color:var(--ink);box-shadow:0 8px 28px -18px rgba(0,0,0,.5)}
+.step .card h4{margin:4px 0 10px}
+.step .card .body{font-size:16px}
+.step .card .body ul{padding-left:1.1em;margin:.3em 0 .8em}
+.step .card .body li{margin-bottom:.3em}
+.verdicts{display:grid;gap:6px;margin-top:10px}
+.verdict{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:start;padding:8px 10px;border-radius:6px;font-size:15px}
+.verdict.err{background:var(--red-bg)}
+.verdict.ei{background:var(--blue-bg)}
+.verdict.ok{background:var(--green-bg)}
+.verdict .pt{font-family:var(--f-mono);font-weight:600;font-size:13px;padding-top:2px;white-space:nowrap}
+.verdict.err .pt{color:var(--red)} .verdict.ei .pt{color:var(--blue)} .verdict.ok .pt{color:var(--green)}
+.model-vs{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center;margin-bottom:10px}
+.model-vs .mbox{background:var(--paper);border:1px solid var(--rule);border-radius:6px;padding:6px 8px;width:120px}
+.model-vs .mbox svg{width:100%;height:58px;display:block}
+.model-vs .mbox span{display:block;text-align:center;font-family:var(--f-mono);font-size:10.5px;color:var(--muted)}
+@media (max-width:860px){
+  .scrolly{grid-template-columns:1fr;gap:0}
+  .stage{top:env(safe-area-inset-top,0px);height:56vh;z-index:3;background:var(--paper);padding-block:8px}
+  .steps{padding-block:4vh 20vh}
+  .step{min-height:72vh}
+  .step:first-child{min-height:50vh}
+}
+
+/* SVG drawing classes */
+.ln{fill:none;stroke:var(--graphite);stroke-linecap:round;stroke-linejoin:round}
+.dot{fill:var(--graphite)}
+.fino .ln{stroke-opacity:.62} .fino .dot{fill-opacity:.62}
+.ghost{fill:none;stroke:var(--graphite);stroke-opacity:.16;stroke-linecap:round}
+.sheet{fill:var(--sheet);stroke:var(--rule);stroke-width:.4}
+.exam{font-family:var(--f-mono);fill:var(--muted);font-size:calc(var(--fs,4px)*.72)}
+.mline{stroke:var(--muted);stroke-width:1;fill:none;stroke-dasharray:4 4;vector-effect:non-scaling-stroke}
+[data-fig],.figwrap{transition:opacity .35s}
+svg.dim [data-fig]:not(.focus){opacity:.16}
+.ann{opacity:0;transition:opacity .35s;pointer-events:none}
+.ann.on{opacity:1}
+.ann path,.ann line,.ann rect,.ann polyline{fill:none;vector-effect:non-scaling-stroke;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.ann.red path,.ann.red line,.ann.red rect,.ann.red polyline{stroke:var(--red)}
+.ann.blue path,.ann.blue line,.ann.blue rect,.ann.blue polyline{stroke:var(--blue)}
+.ann.green path,.ann.green line{stroke:var(--green)}
+.ann.gray path,.ann.gray line,.ann.gray rect{stroke:var(--muted);stroke-dasharray:5 5}
+.ann text{font-family:var(--f-hand);font-weight:700;font-size:var(--fs,5px);paint-order:stroke;stroke:var(--sheet);stroke-width:calc(var(--fs,5px)*.28);stroke-linejoin:round}
+.ann.red text{fill:var(--red)} .ann.blue text{fill:var(--blue)} .ann.green text{fill:var(--green)} .ann.gray text{fill:var(--muted)}
+.ann circle.num{fill:var(--blue)}
+.ann text.numt{fill:var(--sheet);stroke:none;font-family:var(--f-mono);font-weight:600;font-size:calc(var(--fs,5px)*.62)}
+.figwrap.dimall{opacity:.25}
+
+/* Tables */
+.tbl-wrap{overflow-x:auto;margin:.6em 0 .9em}
+table{border-collapse:collapse;width:100%;font-size:14.5px;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:6px 9px;border-bottom:1px solid var(--rule);vertical-align:top}
+th{font-family:var(--f-mono);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600}
+tr.hit td{background:var(--red-bg);font-weight:600}
+tr.hit.blue td{background:var(--blue-bg)}
+td.ok{color:var(--green);font-weight:600} td.no{color:var(--red);font-weight:600}
+.normchart{width:100%;max-width:420px;height:auto;display:block;margin:.4em 0 .6em}
+.normchart text{font-family:var(--f-mono);font-size:10px;fill:var(--muted)}
+.normchart .band{fill:var(--green-bg);stroke:var(--green);stroke-width:1}
+.normchart .axis{stroke:var(--muted);stroke-width:1}
+.normchart .mean{stroke:var(--green);stroke-width:2}
+.normchart .kid{fill:var(--red)}
+.normchart .kidt{fill:var(--red);font-weight:600;font-size:11px}
+
+/* Results */
+.results{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:8px}
+@media (max-width:860px){.results{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.tile{background:var(--sheet);border:1px solid var(--rule);border-radius:8px;padding:14px 16px;min-width:0}
+.tile .k{font-family:var(--f-mono);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.tile .v{font-family:var(--f-display);font-weight:800;font-size:30px;line-height:1.1;margin-top:4px;font-variant-numeric:tabular-nums}
+.tile .s{font-size:14px;color:var(--muted);margin-top:4px}
+.tile.red .v{color:var(--red)} .tile.blue .v{color:var(--blue)}
+.result-text{margin-top:16px}
+
+/* Integration */
+.conv td:first-child{font-weight:600;font-family:var(--f-display)}
+.hyp{background:var(--sheet);border:1px solid var(--ink);border-radius:8px;padding:20px 22px}
+blockquote.model{margin:0;background:var(--sheet);border:1px dashed var(--muted);border-radius:8px;padding:18px 22px;font-size:16px}
+blockquote.model p:last-child{margin:0}
+
+/* Template */
+ol.flow{counter-reset:s;list-style:none;padding:0;margin:0;display:grid;gap:10px}
+ol.flow li{counter-increment:s;display:grid;grid-template-columns:44px 1fr;gap:14px;background:var(--sheet);border:1px solid var(--rule);border-radius:8px;padding:14px 16px}
+ol.flow li::before{content:counter(s);font-family:var(--f-display);font-weight:800;font-size:26px;line-height:1;color:var(--red)}
+ol.flow li b{font-family:var(--f-display)}
+
+/* WISC */
+.idx-map{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
+@media (max-width:980px){.idx-map{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:520px){.idx-map{grid-template-columns:1fr}}
+.idx{background:var(--sheet);border:1px solid var(--rule);border-radius:8px;padding:16px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.idx .ab{font-family:var(--f-display);font-weight:800;font-size:28px;line-height:1}
+.idx .nm{font-weight:600;font-size:15px;line-height:1.3}
+.idx .what{font-size:14.5px;color:var(--muted)}
+.sub{font-family:var(--f-mono);font-size:12.5px;padding:5px 8px;border-radius:5px;background:var(--soft);display:flex;justify-content:space-between;gap:6px}
+.sub.cit{background:var(--blue-bg);color:var(--blue)}
+.sec-idx{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:12px}
+.bands{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));border:1px solid var(--rule);border-radius:8px;overflow:hidden}
+.bands div{padding:10px 8px;font-size:13px;border-right:1px solid var(--rule);background:var(--sheet)}
+.bands div:last-child{border-right:0}
+.bands b{display:block;font-family:var(--f-mono);font-size:12.5px}
+.bands .mid{background:var(--green-bg)}
+@media (max-width:860px){.bands{grid-template-columns:1fr}.bands div{border-right:0;border-bottom:1px solid var(--rule)}}
+
+details.ref{background:var(--sheet);border:1px solid var(--rule);border-radius:8px;padding:0 20px;margin-bottom:12px}
+details.ref summary{cursor:pointer;padding:16px 0;font-family:var(--f-display);font-weight:700;font-size:18px}
+details.ref[open] summary{border-bottom:1px solid var(--rule);margin-bottom:12px}
+details.ref > div{padding-bottom:16px}
+.warn{font-size:14px;color:var(--amber);background:var(--amber-bg);border-radius:6px;padding:8px 12px;margin-top:8px}
+footer{padding-block:40px 70px;color:var(--muted);font-size:14px;border-top:1px solid var(--rule)}
+footer li{margin-bottom:4px;word-break:break-word}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="hero">
+    <div class="eyebrow">Herramientas de la psicología clínica · guía de parcial</div>
+    <h1>Bender, DFH<br>y <span>WISC-V</span></h1>
+    <p class="lede">Dos casos resueltos de punta a punta: entrevista, protocolo de Bender y Dibujo de la Figura Humana, con cada punto calculado a la vista. A medida que bajás, la lámina se corrige sola: en <b class="r">rojo</b> lo que suma al puntaje evolutivo, en <b class="b">azul</b> los indicadores emocionales. Al final, la teoría del WISC-V.</p>
+    <div class="cards" id="heroCards" aria-label="Las nueve láminas del Bender"></div>
+    <nav class="toc" aria-label="Índice">
+      <a href="#metodo">Método</a><a href="#caso1">Caso 1 · Mateo</a><a href="#caso2">Caso 2 · Sofía</a><a href="#plantilla">Plantilla de examen</a><a href="#wisc">WISC-V</a><a href="#tablas">Tablas de consulta</a>
+    </nav>
+  </header>
+</div>
+
+<section class="block" id="metodo">
+  <div class="wrap">
+    <div class="sec-head"><div class="eyebrow">Antes de empezar</div><h2>Cada test se lee en capas que no se mezclan</h2>
+      <p class="measure">El error más común en el parcial es sumar indicadores emocionales al puntaje evolutivo, o usar un indicador fuera de la edad en que vale. Cada capa tiene su propia regla de conteo y su propio umbral.</p></div>
+    <div class="grid2">
+      <div class="panel">
+        <h4>Bender-Koppitz</h4>
+        <div class="reading r"><p><b>1 · Puntaje evolutivo.</b> 30 ítems de error (25 categorías) en 4 tipos: distorsión, rotación, integración, perseveración. Cada uno vale 1. El total se pasa a <b>EMPM</b> (edad de maduración perceptivo-motriz) y se compara con la <b>EC</b>, y con la media ± 1 DS de su grupo de edad.</p></div>
+        <div class="reading b"><p><b>2 · Indicadores emocionales.</b> 12 IE (10 originales + encuadramiento y elaboración espontánea). Se cuentan aparte. Con 3 o más hay riesgo (algunas fuentes toman 2 o más de 8 a 10 años). Se suman tiempo y uso del espacio.</p></div>
+      </div>
+      <div class="panel">
+        <h4>Dibujo de la Figura Humana (Koppitz)</h4>
+        <div class="reading k"><p><b>1 · Estructura y estilo.</b> Pautas formales: tamaño, emplazamiento, presión, trazo, simetría, borrado y sombreado, detalles, movimiento. Más el estilo gráfico global y la verbalización.</p></div>
+        <div class="reading r"><p><b>2 · Ítems evolutivos.</b> Según edad y sexo: <span class="mono">5 − esperados omitidos + excepcionales presentes</span>. El puntaje da un nivel de capacidad mental y un rango de CI estimado.</p></div>
+        <div class="reading b"><p><b>3 · Indicadores emocionales.</b> 30 IE, cada uno con su edad de validez. Con 2 o más, el dibujo es altamente sugestivo de problemas emocionales.</p></div>
+      </div>
+    </div>
+    <div class="rule-box" style="margin-top:20px">
+      <h4>Tres reglas que ahorran puntos</h4>
+      <ul style="margin:.4em 0 0;padding-left:1.1em">
+        <li><b>En caso de duda, no se computa</b> (Bender). Solo cuentan desviaciones netas.</li>
+        <li>Un mismo rasgo puede leerse en dos capas sin sumarse dos veces. La figura grande del DFH es a la vez un dato estructural (tamaño) y un IE. Las rayas en la Fig. 2 del Bender son un IE y no un error evolutivo.</li>
+        <li>El DFH estima un rango de CI. <b>No es un CI.</b> Es un screening que se contrasta con lo que el caso traiga (entrevista, rendimiento escolar, un WISC si lo hubiera).</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="caso1"><div class="wrap" id="case-mateo"></div></section>
+<section class="block" id="caso2"><div class="wrap" id="case-sofia"></div></section>
+
+<section class="block" id="plantilla">
+  <div class="wrap">
+    <div class="sec-head"><div class="eyebrow">Para el día del parcial</div><h2>Plantilla de resolución</h2>
+      <p class="measure">El mismo recorrido que hicimos en los dos casos, en el orden en que conviene escribirlo. Cada paso deja un dato que se usa en la integración.</p></div>
+    <ol class="flow">
+      <li><div><b>Leer la entrevista y marcar pistas.</b> Motivo de consulta, quién deriva, desarrollo (marcha, lenguaje, motricidad fina), escolaridad, familia y hechos recientes, sueño, conducta en sesión. Anotar la <b>EC exacta en años-meses</b> y el <b>sexo</b>: los vas a necesitar en los dos tests.</div></li>
+      <li><div><b>Bender · puntaje evolutivo.</b> Figura por figura (A, 1–8), revisar los ítems que corresponden a cada una. En duda, no computar. Sumar: el puntaje bruto va de 0 a 30.</div></li>
+      <li><div><b>Bender · EMPM vs EC.</b> Con la tabla de equivalentes de edad, pasar el puntaje a EMPM y compararla con la EC. Ubicar el puntaje en la media ± 1 DS del grupo de edad. Revisar si hay indicadores altamente significativos de lesión. Desde los 9-10 años, tener en cuenta el efecto techo.</div></li>
+      <li><div><b>Bender · indicadores emocionales.</b> Revisar los 12 IE, chequear la edad de validez de cada uno y contarlos. Con 3 o más, decir que es significativo (con 2 o más si tu cátedra toma ese criterio para 8–10). Sumar el tiempo de ejecución y el uso del espacio.</div></li>
+      <li><div><b>DFH · estructura y estilo.</b> Tamaño, emplazamiento, presión, trazo, simetría, borrado y sombreado, detalles, movimiento. Estilo global. Verbalización ("¿quién es?, ¿qué hace?, ¿qué siente?").</div></li>
+      <li><div><b>DFH · ítems evolutivos.</b> Buscar en la tabla los esperados y los excepcionales de esa edad y sexo. Calcular <span class="mono">5 − omitidos + excepcionales</span> y dar el nivel y el rango de CI estimado. Aclarar que es una estimación.</div></li>
+      <li><div><b>DFH · indicadores emocionales.</b> Revisar los 30 IE con su edad de validez. Con 2 o más, es significativo. Agruparlos en un sentido común (agresividad, retraimiento, control rígido…).</div></li>
+      <li><div><b>Integración.</b> Armar una tabla de convergencias (entrevista × Bender × DFH) por área: madurativa/visomotora, intelectual estimada y emocional. Escribir la hipótesis con lenguaje probabilístico ("compatible con", "sugiere") y cerrar con sugerencias: qué otras pruebas tomar (por ejemplo, un WISC-V), derivaciones y orientación a padres y escuela.</div></li>
+    </ol>
+    <div class="grid2" style="margin-top:20px">
+      <div class="panel"><h4>Errores típicos que restan</h4><ul>
+        <li>Sumar IE al puntaje evolutivo del Bender.</li>
+        <li>Computar como rotación que el niño gire la <i>hoja</i> para aprovechar el espacio. Eso se anota, no se puntúa. Girar la <i>tarjeta</i> sí se computa.</li>
+        <li>Contar un IE del DFH antes de su edad de validez (omisión de pies en un varón de 8, omisión de cuello en un varón de 9…).</li>
+        <li>Restar un ítem que no es esperado a esa edad. Las manos, por ejemplo, no son esperadas en ninguna edad de la tabla.</li>
+        <li>Decir "CI = 95" a partir del DFH. Corresponde dar un <b>rango estimado</b>.</li>
+      </ul></div>
+      <div class="panel"><h4>Frases útiles para redactar</h4><ul>
+        <li>"Presenta una maduración perceptivo-motriz equivalente a la de un niño de … (EMPM), por debajo / acorde a su EC de …"</li>
+        <li>"Se observan … indicadores emocionales, cantidad que según Koppitz resulta significativa, que en conjunto sugieren …"</li>
+        <li>"El DFH ubica su capacidad mental estimada en un nivel …, compatible con un CI de entre … y …"</li>
+        <li>"Estos datos convergen con lo relatado en la entrevista, donde …"</li>
+      </ul></div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="wisc">
+  <div class="wrap">
+    <div class="sec-head"><div class="eyebrow">Teoría · sin cálculo</div><h2>WISC-V: pruebas e índices</h2>
+      <p class="measure">Escala de Inteligencia de Wechsler para Niños, quinta edición (6:0 a 16:11 años). Trae 15 pruebas: 10 principales y 5 secundarias. Las principales forman 5 índices primarios y, siete de ellas, el CI Total (CIT). Las pruebas se combinan además en 5 índices secundarios. Los nombres son los de la versión española (Pearson, 2015).</p>
+      <div class="warn">En Argentina, la adaptación publicada con baremos locales es el WISC-IV (Paidós, 2011). Si tu cátedra usa otros nombres para las pruebas del WISC-V, quedate con los de tu apunte.</div></div>
+
+    <h3 style="margin-bottom:14px">Índices primarios</h3>
+    <div class="idx-map">
+      <div class="idx"><div class="ab">ICV</div><div class="nm">Comprensión Verbal</div><div class="what">Formar conceptos verbales, razonar con palabras y usar el conocimiento adquirido.</div><div class="sub cit">Semejanzas <span>CIT</span></div><div class="sub cit">Vocabulario <span>CIT</span></div></div>
+      <div class="idx"><div class="ab">IVE</div><div class="nm">Visoespacial</div><div class="what">Analizar y sintetizar relaciones espaciales, visualizar e integrar partes en un todo.</div><div class="sub cit">Cubos <span>CIT</span></div><div class="sub">Puzles visuales</div></div>
+      <div class="idx"><div class="ab">IRF</div><div class="nm">Razonamiento Fluido</div><div class="what">Descubrir reglas y relaciones en material nuevo: razonamiento inductivo y cuantitativo.</div><div class="sub cit">Matrices <span>CIT</span></div><div class="sub cit">Balanzas <span>CIT</span></div></div>
+      <div class="idx"><div class="ab">IMT</div><div class="nm">Memoria de Trabajo</div><div class="what">Retener información en la mente y operar con ella, auditiva y visual.</div><div class="sub cit">Dígitos <span>CIT</span></div><div class="sub">Span de dibujos</div></div>
+      <div class="idx"><div class="ab">IVP</div><div class="nm">Velocidad de Procesamiento</div><div class="what">Rapidez y precisión para explorar, discriminar y registrar información visual simple.</div><div class="sub cit">Claves <span>CIT</span></div><div class="sub">Búsqueda de símbolos</div></div>
+    </div>
+    <p class="small" style="margin-top:10px">En azul, las 7 pruebas que forman el CIT: Semejanzas, Vocabulario, Cubos, Matrices, Balanzas, Dígitos y Claves.</p>
+
+    <h3 style="margin:36px 0 14px">Las 15 pruebas</h3>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Prueba</th><th>Tipo</th><th>Índice primario</th><th>Qué hace el niño</th><th>Qué evalúa</th></tr></thead>
+      <tbody>
+        <tr><td>Semejanzas</td><td>Principal · CIT</td><td>ICV</td><td>Dice en qué se parecen dos palabras (por ejemplo, "leche" y "agua").</td><td>Razonamiento verbal abstracto, formación de conceptos.</td></tr>
+        <tr><td>Vocabulario</td><td>Principal · CIT</td><td>ICV</td><td>Nombra dibujos y define palabras.</td><td>Conocimiento léxico, expresión verbal.</td></tr>
+        <tr><td>Cubos</td><td>Principal · CIT</td><td>IVE</td><td>Reproduce diseños con cubos bicolores, con tiempo.</td><td>Análisis y síntesis visoespacial, coordinación visomotora.</td></tr>
+        <tr><td>Puzles visuales</td><td>Principal</td><td>IVE</td><td>Elige las 3 piezas que, juntas, arman el puzle modelo.</td><td>Visualización y rotación mental sin manipular.</td></tr>
+        <tr><td>Matrices</td><td>Principal · CIT</td><td>IRF</td><td>Completa una matriz o una serie con la opción correcta.</td><td>Razonamiento inductivo no verbal.</td></tr>
+        <tr><td>Balanzas</td><td>Principal · CIT</td><td>IRF</td><td>Elige el peso que equilibra una balanza, con tiempo.</td><td>Razonamiento cuantitativo, inducción.</td></tr>
+        <tr><td>Dígitos</td><td>Principal · CIT</td><td>IMT</td><td>Repite series de números en orden directo, inverso y creciente.</td><td>Memoria de trabajo auditiva, atención.</td></tr>
+        <tr><td>Span de dibujos</td><td>Principal</td><td>IMT</td><td>Ve dibujos y luego los reconoce en el orden en que aparecieron.</td><td>Memoria de trabajo visual.</td></tr>
+        <tr><td>Claves</td><td>Principal · CIT</td><td>IVP</td><td>Copia símbolos asociados a números, con tiempo.</td><td>Velocidad grafomotora, aprendizaje asociativo.</td></tr>
+        <tr><td>Búsqueda de símbolos</td><td>Principal</td><td>IVP</td><td>Marca si el símbolo modelo está en el grupo, con tiempo.</td><td>Velocidad perceptiva, discriminación visual.</td></tr>
+        <tr><td>Información</td><td>Secundaria</td><td>(ICV)</td><td>Responde preguntas de cultura general.</td><td>Conocimiento adquirido, memoria a largo plazo.</td></tr>
+        <tr><td>Comprensión</td><td>Secundaria</td><td>(ICV)</td><td>Explica qué haría en situaciones sociales o por qué existen ciertas normas.</td><td>Juicio práctico, razonamiento social.</td></tr>
+        <tr><td>Aritmética</td><td>Secundaria</td><td>(IRF)</td><td>Resuelve problemas mentales, con tiempo.</td><td>Razonamiento cuantitativo con carga de memoria de trabajo.</td></tr>
+        <tr><td>Letras y números</td><td>Secundaria</td><td>(IMT)</td><td>Escucha letras y números mezclados y los repite ordenados.</td><td>Memoria de trabajo auditiva, secuenciación.</td></tr>
+        <tr><td>Cancelación</td><td>Secundaria</td><td>(IVP)</td><td>Tacha dibujos objetivo entre distractores, con tiempo.</td><td>Velocidad, atención selectiva visual.</td></tr>
+      </tbody></table></div>
+    <p class="small">Entre paréntesis, el dominio al que se asocia cada prueba secundaria. Las secundarias amplían la exploración o reemplazan a una principal invalidada; no forman índices primarios.</p>
+
+    <h3 style="margin:36px 0 14px">Índices secundarios</h3>
+    <div class="sec-idx">
+      <div class="idx"><div class="nm">Razonamiento Cuantitativo (IRC)</div><div class="what">Razonar con cantidades y relaciones numéricas. Útil para pensar dificultades en matemática.</div><div class="sub">Balanzas</div><div class="sub">Aritmética</div></div>
+      <div class="idx"><div class="nm">Memoria de Trabajo Auditiva (IMTA)</div><div class="what">Memoria de trabajo con material solo auditivo, sin el componente visual del Span de dibujos.</div><div class="sub">Dígitos</div><div class="sub">Letras y números</div></div>
+      <div class="idx"><div class="nm">No Verbal (INV)</div><div class="what">Capacidad general con mínima exigencia de respuesta verbal. Útil con dificultades de lenguaje, hipoacusia o niños bilingües.</div><div class="sub">Cubos · Puzles visuales</div><div class="sub">Matrices · Balanzas</div><div class="sub">Span de dibujos · Claves</div></div>
+      <div class="idx"><div class="nm">Capacidad General (ICG)</div><div class="what">Capacidad intelectual con menor peso de la memoria de trabajo y la velocidad. Útil cuando estas bajan el CIT (TDAH, dificultades de aprendizaje).</div><div class="sub">Semejanzas · Vocabulario</div><div class="sub">Cubos · Matrices · Balanzas</div></div>
+      <div class="idx"><div class="nm">Competencia Cognitiva (ICC)</div><div class="what">Eficiencia del procesamiento: cuán rápido y bien se maneja la información. Se interpreta comparándolo con el ICG.</div><div class="sub">Dígitos · Span de dibujos</div><div class="sub">Claves · Búsqueda de símbolos</div></div>
+    </div>
+
+    <h3 style="margin:36px 0 14px">Escalas y clasificación</h3>
+    <div class="grid2">
+      <div class="panel"><h4>Dos métricas</h4><ul>
+        <li><b>Puntuación escalar</b> de cada prueba: media 10, DE 3 (rango 1–19).</li>
+        <li><b>Puntuación compuesta</b> de los índices y el CIT: media 100, DE 15.</li>
+        <li>El CIT sale de 7 pruebas. Cada índice primario sale de 2.</li>
+        <li>Cuando los índices difieren mucho entre sí, el CIT pierde valor como resumen y se interpreta el perfil.</li>
+      </ul></div>
+      <div class="panel"><h4>Cómo se lee el perfil</h4><ul>
+        <li>Primero el CIT, como resumen general.</li>
+        <li>Después los 5 índices primarios: fortalezas y debilidades relativas del niño.</li>
+        <li>Los índices secundarios se usan para preguntas específicas: el ICG frente al ICC, o el No Verbal si hay problemas de lenguaje.</li>
+      </ul></div>
+    </div>
+    <div class="bands" style="margin-top:14px" aria-label="Bandas de clasificación del WISC-V">
+      <div><b>≤ 69</b>Extremadamente bajo</div><div><b>70–79</b>Muy bajo</div><div><b>80–89</b>Promedio bajo</div><div class="mid"><b>90–109</b>Promedio</div><div><b>110–119</b>Promedio alto</div><div><b>120–129</b>Muy alto</div><div><b>≥ 130</b>Extremadamente alto</div>
+    </div>
+    <p class="small" style="margin-top:8px">Etiquetas del WISC-V. Muchas cátedras siguen usando las del WISC-IV: Muy superior, Superior, Medio alto, Medio, Medio bajo, Limítrofe, Muy bajo. Usá las de tu manual.</p>
+  </div>
+</section>
+
+<section class="block" id="tablas">
+  <div class="wrap">
+    <div class="sec-head"><div class="eyebrow">Para tener a mano</div><h2>Tablas de consulta</h2></div>
+    <div id="refTables"></div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <h4 style="color:var(--ink);margin-bottom:10px">Fuentes y puntos para verificar con tu cátedra</h4>
+    <ul>
+      <li><b>Dos tablas de EMPM en circulación.</b> La fina (Koppitz, protocolos UNAM y UADY), usada en esta guía, y una gruesa (apunte de la Universidad de Concepción). Para 8 y 2 errores, las dos coinciden en lo esencial. Confirmá cuál usa tu cátedra.</li>
+      <li>El criterio de "un año o más de diferencia entre EMPM y EC" es una práctica docente habitual, pero no está en Koppitz. El criterio de Koppitz es la media ± 1 DS de cada grupo de edad.</li>
+      <li>Hay baremos argentinos (Tucumán, Mendoza, CABA, Santiago del Estero) con medias más altas que las de Koppitz. Si tu cátedra los usa, el mismo puntaje puede quedar dentro de la norma local.</li>
+      <li>Las edades de validez de los IE del DFH vienen de resúmenes secundarios que coinciden con lo que se enseña habitualmente. El rótulo "estructura y estilo" sigue aquí el marco de pautas formales y estilo gráfico (Celener, Hammer, Machover).</li>
+      <li>La tabla de ítems esperados y excepcionales y la conversión de puntajes del DFH salen de De Moreau y Koppitz (Revista Interamericana de Psicología, c. 1968).</li>
+      <li>Las láminas del Bender están dibujadas de forma esquemática para practicar. No reemplazan las láminas oficiales.</li>
+      <li>Fuentes: Koppitz, <i>El Test Guestáltico Visomotor para niños</i> y <i>El dibujo de la figura humana en los niños</i> (Guadalupe) · Medina y Pacheco (2022), Ed. UCSE · Heredia y Ancona et al., UNAM · Luchetti, López y Brizzio (2016), <i>Investigaciones en Psicología</i> (UBA) · Contini et al. (2017), <i>Investigaciones en Psicología</i> (UBA) · Burán et al. (2023), RACC · Pearson Clinical España, WISC-V.</li>
+    </ul>
+    <p style="margin-top:16px">Los casos y las entrevistas son ficticios y se armaron para practicar.</p>
+  </div>
+</footer>
+
+<script>
+/*PURE-START*/
+// ---------- Normas Koppitz (Bender) ----------
+// [desde (meses), hasta (meses), etiqueta, media, DS]
+const NORMS=[[60,65,'5-0 a 5-5',13.6,3.61],[66,71,'5-6 a 5-11',9.8,3.72],[72,77,'6-0 a 6-5',8.4,4.12],[78,83,'6-6 a 6-11',6.4,3.76],[84,89,'7-0 a 7-5',4.8,3.61],[90,95,'7-6 a 7-11',4.7,3.34],[96,101,'8-0 a 8-5',3.7,3.60],[102,107,'8-6 a 8-11',2.5,3.03],[108,113,'9-0 a 9-5',1.7,1.76],[114,119,'9-6 a 9-11',1.6,1.69],[120,125,'10-0 a 10-5',1.6,1.67],[126,131,'10-6 a 10-11',1.5,2.10]];
+// Tabla fina de equivalentes de edad (puntaje → EMPM)
+const EMPM={0:'11-0 a 11-11',1:'10-0 a 10-11',2:'9-0 a 9-11',3:'8-6 a 8-11',4:'8-0 a 8-5',5:'7-6 a 7-11',6:'7-0 a 7-5',7:'6-6 a 6-11',8:'6-0 a 6-5',9:'5-9 a 5-11',10:'5-6 a 5-8',11:'5-4 a 5-5',12:'5-2 a 5-3',13:'5-0 a 5-1',14:'4-10 a 4-11',15:'4-8 a 4-9'};
+const EMPM_GRUESA=[[11,30,'5 a 5½'],[9,10,'5½ a 6'],[8,8,'6 a 6½'],[6,7,'6½ a 7'],[5,5,'7 a 8'],[4,4,'8 a 8½'],[3,3,'8½ a 9'],[2,2,'9 a 10'],[0,1,'más de 10']];
+function grupoNorma(ec){const t=ec.a*12+ec.m;return NORMS.find(n=>t>=n[0]&&t<=n[1])||null}
+function empm(score){return EMPM[Math.min(score,15)]}
+function empmGruesa(score){const r=EMPM_GRUESA.find(r=>score>=r[0]&&score<=r[1]);return r?r[2]:'—'}
+
+// ---------- DFH Koppitz ----------
+const ITEMS={cabeza:'Cabeza',ojos:'Ojos',pupilas:'Pupilas',cejas:'Cejas o pestañas',nariz:'Nariz',fosas:'Fosas nasales',boca:'Boca',dosLabios:'Dos labios',orejas:'Orejas',pelo:'Pelo',cuello:'Cuello',cuerpo:'Cuerpo',brazos:'Brazos',brazos2d:'Brazos en 2 dimensiones',brazosHombro:'Brazos unidos al hombro',brazosAbajo:'Brazos hacia abajo',codo:'Codo',manos:'Manos',dedos:'Dedos',dedosCorrectos:'Número correcto de dedos',piernas:'Piernas',piernas2d:'Piernas en 2 dimensiones',rodilla:'Rodilla',pies:'Pies',pies2d:'Pies en 2 dimensiones',perfil:'Perfil',proporciones:'Buenas proporciones',ropa1:'Ropa: una prenda o ninguna',ropa2:'Ropa: dos o tres prendas',ropa4:'Ropa: cuatro o más prendas'};
+const BASE=['cabeza','ojos','nariz','boca','cuerpo','piernas'];
+const V8=[...BASE,'brazos','pies','brazos2d','piernas2d','pelo'];
+const V10=[...V8,'cuello','brazosAbajo'];
+const ESP={v:{5:BASE,6:[...BASE,'brazos'],7:[...BASE,'brazos','pies','brazos2d'],8:V8,9:V8,10:V10,11:V10,12:V10},
+  n:{5:[...BASE,'brazos'],6:[...BASE,'brazos','pies','pelo'],7:[...BASE,'brazos','pies','brazos2d','piernas2d','pelo'],8:V8,9:[...V8,'cuello'],10:V10,11:[...V10,'brazosHombro','ropa2'],12:[...V10,'brazosHombro','ropa2']}};
+const E5=['rodilla','perfil','codo','dosLabios','fosas','proporciones','brazosHombro','ropa4'];
+const EXC={v:{5:[...E5,'pies2d','dedosCorrectos','pupilas'],6:E5,7:E5.slice(0,6),8:E5.slice(0,5),9:E5.slice(0,5),10:['rodilla','dosLabios'],11:['rodilla'],12:['rodilla']},
+  n:{5:[...E5,'pies2d'],6:E5,7:['rodilla','perfil','codo','dosLabios'],8:['rodilla','perfil','codo'],9:['rodilla','perfil'],10:['rodilla','perfil'],11:['rodilla'],12:['rodilla']}};
+const DFH_CONV=[[7,30,'Normal alto a superior','110 o más'],[6,6,'Normal a superior','90–135'],[5,5,'Normal a normal alto','85–120'],[4,4,'Normal','80–110'],[3,3,'Normal bajo','70–90'],[2,2,'Limítrofe a normal bajo','60–80'],[-9,1,'Deficiente, o funcionamiento deficiente por problemas emocionales serios','menos de 70']];
+function edadTabla(ec){return Math.min(12,Math.max(5,ec.a))}
+function dfhScore(cs){const sx=cs.sexo;const age=edadTabla(cs.ec);const esp=ESP[sx][age],exc=EXC[sx][age],it=cs.dfh.items;
+  const omit=esp.filter(k=>!it[k]),pres=exc.filter(k=>it[k]);return {age,esp,exc,omit,pres,score:5-omit.length+pres.length}}
+function dfhNivel(score){return DFH_CONV.find(r=>score>=r[0]&&score<=r[1])}
+// IE del DFH: [id, nombre, grupo, edad mínima varones, edad mínima niñas (0 = todas), criterio, significado]
+const IE_DFH=[
+ ['integracion','Integración pobre de las partes','Signos cualitativos',7,6,'Una o más partes no unidas al resto','Inestabilidad, personalidad pobremente integrada, impulsividad'],
+ ['sombCara','Sombreado de la cara','Signos cualitativos',0,0,'Sombreado deliberado de la cara o de parte de ella','Ansiedad, autoconcepto pobre'],
+ ['sombCuerpo','Sombreado del cuerpo y/o extremidades','Signos cualitativos',9,8,'','Ansiedad por el cuerpo'],
+ ['sombManos','Sombreado de manos y/o cuello','Signos cualitativos',8,7,'','Ansiedad, conflicto con los impulsos'],
+ ['asimetria','Asimetría grosera de extremidades','Signos cualitativos',0,0,'Un brazo o una pierna marcadamente distinto del otro','Impulsividad, mala coordinación, posible disfunción neurológica'],
+ ['inclinacion','Inclinación de la figura','Signos cualitativos',0,0,'Eje vertical inclinado 15° o más','Inestabilidad, falta de base firme'],
+ ['pequena','Figura pequeña','Signos cualitativos',0,0,'5 cm o menos de alto','Inseguridad extrema, retraimiento, depresión'],
+ ['grande','Figura grande','Signos cualitativos',8,8,'23 cm o más de alto','Expansividad, inmadurez, controles internos pobres'],
+ ['transparencias','Transparencias','Signos cualitativos',0,0,'Partes del cuerpo que se ven a través de la ropa o de otras partes','Inmadurez, impulsividad, conducta actuadora'],
+ ['cabezaPeq','Cabeza pequeña','Detalles especiales',0,0,'Un décimo o menos de la altura total','Sentimientos intensos de inadecuación intelectual'],
+ ['bizcos','Ojos bizcos o desviados','Detalles especiales',0,0,'','Hostilidad, rebeldía, ira'],
+ ['dientes','Dientes','Detalles especiales',0,0,'Cualquier representación de dientes','Agresividad (oral)'],
+ ['brazosCortos','Brazos cortos','Detalles especiales',0,0,'No llegan a la cintura','Dificultad para conectarse con el mundo, retraimiento, inhibición de impulsos'],
+ ['brazosLargos','Brazos largos','Detalles especiales',0,0,'Llegan por debajo de las rodillas','Agresividad dirigida hacia afuera, necesidad de contacto'],
+ ['brazosPegados','Brazos pegados al cuerpo','Detalles especiales',0,0,'Sin espacio entre brazos y cuerpo','Control interno rígido, dificultad para conectarse'],
+ ['manosGrandes','Manos grandes','Detalles especiales',0,0,'Del tamaño de la cara o más grandes','Conducta agresiva o actuadora'],
+ ['manosOmitidas','Manos seccionadas u omitidas','Detalles especiales',0,0,'Brazos sin manos ni dedos','Inadecuación, culpa'],
+ ['piernasJuntas','Piernas juntas','Detalles especiales',0,0,'Sin espacio entre las piernas','Tensión, control rígido de impulsos (sexuales)'],
+ ['genitales','Genitales','Detalles especiales',0,0,'','Ansiedad intensa, pobre control de impulsos'],
+ ['monstruo','Monstruo o figura grotesca','Detalles especiales',0,0,'','Inadecuación intensa, autoconcepto muy pobre'],
+ ['tresFig','Tres o más figuras espontáneas','Detalles especiales',0,0,'Figuras no relacionadas entre sí','Bajo rendimiento escolar, inadecuación'],
+ ['nubes','Nubes, lluvia, nieve, pájaros volando','Detalles especiales',0,0,'','Ansiedad, sentirse amenazado por el mundo adulto'],
+ ['omOjos','Omisión de ojos','Omisiones',0,0,'','Aislamiento social, negación'],
+ ['omNariz','Omisión de nariz','Omisiones',6,5,'','Timidez, retraimiento, falta de interés social'],
+ ['omBoca','Omisión de boca','Omisiones',0,0,'','Angustia, inseguridad, retraimiento, dificultad para comunicarse'],
+ ['omCuerpo','Omisión del cuerpo','Omisiones',0,0,'','Retraso, disfunción cortical, ansiedad corporal aguda'],
+ ['omBrazos','Omisión de brazos','Omisiones',6,5,'','Ansiedad y culpa por conductas hechas con brazos o manos'],
+ ['omPiernas','Omisión de piernas','Omisiones',0,0,'','Angustia, inseguridad'],
+ ['omPies','Omisión de pies','Omisiones',9,7,'','Inseguridad, falta de base, desvalimiento'],
+ ['omCuello','Omisión del cuello','Omisiones',10,9,'','Inmadurez, impulsividad, controles internos pobres']];
+function ieDfh(id){return IE_DFH.find(x=>x[0]===id)}
+function ieValido(id,cs){const x=ieDfh(id);const min=cs.sexo==='v'?x[3]:x[4];return cs.ec.a>=min}
+/*PURE-END*/
+
+// ---------- Dibujo a lápiz (trazo irregular) ----------
+function mulberry(seed){let a=seed>>>0;return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+let RNG=mulberry(1);
+const J=a=>(RNG()*2-1)*a;
+const f=n=>Math.round(n*100)/100;
+function withSeed(seed,fn){const prev=RNG;RNG=mulberry(seed);const r=fn();RNG=prev;return r}
+function wob(pts,amp,closed){
+  const P=closed?[...pts,pts[0]]:pts.slice();const out=[];let d=0;
+  for(let i=0;i<P.length-1;i++){const[x1,y1]=P[i],[x2,y2]=P[i+1];const L=Math.hypot(x2-x1,y2-y1)||1e-6;const n=Math.max(1,Math.ceil(L/2.2));const nx=-(y2-y1)/L,ny=(x2-x1)/L;
+    for(let k=(i===0?0:1);k<=n;k++){const t=k/n;d=d*.55+J(amp);out.push([x1+(x2-x1)*t+nx*d,y1+(y2-y1)*t+ny*d])}}
+  return 'M'+out.map(p=>f(p[0])+' '+f(p[1])).join(' L');
+}
+function ellPts(cx,cy,rx,ry,a0,turn){const N=Math.max(14,Math.round((rx+ry)*3));const pts=[];const T=turn||1.05;for(let i=0;i<=N;i++){const a=a0+i/N*Math.PI*2*T;pts.push([cx+Math.cos(a)*rx,cy+Math.sin(a)*ry])}return pts}
+function wcirc(cx,cy,rx,ry,amp){return wob(ellPts(cx,cy,rx,ry,RNG()*6.28),amp)}
+
+// ---------- Láminas del Bender (coordenadas locales en mm, tamaño modelo) ----------
+function benderFig(id,o,c){
+  const sw=c.sw/c.s,a=c.amp/c.s,dr=Math.max(c.sw*.9,.55)/c.s;
+  let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;const X=(x,y,r)=>{r=r||0;x0=Math.min(x0,x-r);y0=Math.min(y0,y-r);x1=Math.max(x1,x+r);y1=Math.max(y1,y+r)};
+  const L=(pts,cl)=>{pts.forEach(p=>X(p[0],p[1]));return `<path class="ln" d="${wob(pts,a,cl)}" stroke-width="${f(sw)}"/>`};
+  const D=(x,y)=>{X(x,y,dr);return `<circle class="dot" cx="${f(x+J(a*.3))}" cy="${f(y+J(a*.3))}" r="${f(dr)}"/>`};
+  const C=(x,y,rx,ry)=>{ry=ry||rx;X(x,y,Math.max(rx,ry));return `<path class="ln" d="${wcirc(x,y,rx,ry,a*Math.min(1,rx/3))}" stroke-width="${f(sw)}"/>`};
+  let s='';
+  if(id==='A'){const g=o.gap||0;s+=C(9,10,8,8*(o.flat||1));s+=L([[17+g,10],[27+g,0],[37+g,10],[27+g,20]],true)}
+  if(id==='1'){let x=2,pr=0;for(let i=0;i<12;i++){const circ=o.circFrom!=null&&i>=o.circFrom;const r=circ?(o.r0||.9)+(i-o.circFrom)*(o.grow||0):dr;if(i>0)x+=2.6+pr+r;pr=r;s+=circ?C(x,4,r):D(x,4)}}
+  if(id==='2'){for(let i=0;i<11;i++)for(let j=0;j<3;j++){const x=2+i*4.6+j*1.7,y=2+j*3.8;if(o.dashFrom!=null&&i>=o.dashFrom)s+=L([[x-1.3,y-.5],[x+1.3,y+.4]]);else s+=C(x,y,1.05)}}
+  if(id==='3'){const cn=o.counts||[1,3,5,7];cn.forEach((n,k)=>{const rc=o.rc?o.rc[k]:0;const xk=2+k*7.5;const vs=3.1+rc*1.1;for(let j=0;j<n;j++){const m=j-(n-1)/2;const x=xk+Math.abs(m)*1.3,y=12+m*vs;s+=rc?C(x,y,rc):D(x,y)}})}
+  if(id==='4'){const g=o.gap||0;s+=L([[0,2],[0,16],[14,16],[14,2]]);const pts=[];for(let i=0;i<=26;i++){const t=i/26;const u=g+24*t,h=10*Math.pow(Math.sin(Math.PI*t),1.2);pts.push([14+.7071*u+.7071*h,16+.7071*u-.7071*h])}s+=L(pts)}
+  if(id==='5'){const rr=o.circ?1:0;for(let k=0;k<19;k++){const an=Math.PI-k*Math.PI/18;const x=15+13*Math.cos(an),y=30-13*Math.sin(an);s+=rr?C(x,y,rr):D(x,y)}for(let i=1;i<=7;i++){const x=15+i*2.6*.5,y=17-i*2.6*.866;s+=rr?C(x,y,rr):D(x,y)}}
+  if(id==='6'){let h=[];if(o.angular){for(let k=0;k<=16;k++){const x=k*3.25;h.push([x,16+3.2*Math.sin(2*Math.PI*x/13)])}}else{for(let x=0;x<=52;x+=.8)h.push([x,16+3.2*Math.sin(2*Math.PI*x/13)])}s+=L(h);const v=[];for(let y=0;y<=34;y+=.8)v.push([22-(y-17)*.3+2.8*Math.sin(2*Math.PI*y/13),y]);s+=L(v)}
+  if(id==='7'){const H=(cx,cy,deg,drop,partial)=>{const t=deg*Math.PI/180;let p=[[0,-15],[5,-9],[5,9],[0,15],[-5,9],[-5,-9]].map(([x,y])=>[cx+x*Math.cos(t)-y*Math.sin(t),cy+x*Math.sin(t)+y*Math.cos(t)]);if(drop!=null)p.splice(drop,1);return partial?L(p.slice(0,4)):L(p,true)};
+    if(o.partial)s+=H(8,17,0,null,true);else{s+=H(8,17,0);s+=o.sep?H(27,19,55,o.drop):H(19,19,55,o.drop)}}
+  if(id==='8'){s+=L([[0,7],[7,0],[45,0],[52,7],[45,14],[7,14]],true);s+=L([[26,0],[31,7],[26,14],[21,7]],true)}
+  return {s,box:[x0,y0,x1-x0,y1-y0]};
+}
+function modelSVG(id){return withSeed(97+id.charCodeAt(0),()=>{const r=benderFig(id,{},{s:1,sw:.6,amp:.03});const b=r.box;return `<svg viewBox="${f(b[0]-3)} ${f(b[1]-3)} ${f(b[2]+6)} ${f(b[3]+6)}" role="img" aria-label="Modelo figura ${id}">${r.s}</svg>`})}
+
+// ---------- Figura humana ----------
+function figura(o){
+  const {cx,top,H}=o,sw=o.sw,a=o.amp,r=H*.105;
+  const L=(pts,cl)=>`<path class="ln" d="${wob(pts,a,cl)}" stroke-width="${sw}"/>`;
+  const E=(x,y,rx,ry)=>`<path class="ln" d="${wcirc(x,y,rx,ry,a*Math.min(1,rx/4))}" stroke-width="${sw}"/>`;
+  const Df=(x,y,rr)=>`<circle class="dot" cx="${f(x)}" cy="${f(y)}" r="${f(rr)}"/>`;
+  let s='';const reg={};
+  const hy=top+r*(o.hair==='pinchos'?1.3:1);
+  if(o.ghost)s+=`<path class="ghost" d="${wcirc(cx+r*.45,hy-r*.25,r*.95,r*1.02,a)}" stroke-width="${sw*1.3}"/><path class="ghost" d="${wcirc(cx-r*.3,hy+r*.1,r*.88,r*.95,a)}" stroke-width="${sw*1.3}"/>`;
+  s+=E(cx,hy,r*.92,r);reg.cabeza=[cx-r,hy-r,2*r,2*r];
+  if(o.hair==='pinchos'){const p=[];for(let i=0;i<=12;i++){const an=(200+i*(140/12))*Math.PI/180;const rr=i%2?r*1.32:r*.98;p.push([cx+Math.cos(an)*rr*.95,hy+Math.sin(an)*rr])}s+=L(p);reg.pelo=[cx-r*1.2,hy-r*1.4,r*2.4,r*.9]}
+  if(o.hair==='largo'){s+=L([[cx-r*.15,hy-r*1.02],[cx-r*.8,hy-r*.75],[cx-r*1.08,hy],[cx-r*1.12,hy+r*.9],[cx-r*1.2,hy+r*1.55]])+L([[cx+r*.15,hy-r*1.02],[cx+r*.8,hy-r*.75],[cx+r*1.08,hy],[cx+r*1.12,hy+r*.9],[cx+r*1.2,hy+r*1.55]])+L([[cx-r*.8,hy-r*.45],[cx-r*.25,hy-r*.72],[cx+r*.45,hy-r*.6],[cx+r*.82,hy-r*.42]]);reg.pelo=[cx-r*1.3,hy-r*1.15,r*2.6,r*2.8]}
+  const ey=hy-r*.18,ex=r*.4;
+  if(o.eyes==='pupilas')s+=E(cx-ex,ey,r*.17,r*.12)+E(cx+ex,ey,r*.17,r*.12)+Df(cx-ex,ey,r*.06)+Df(cx+ex,ey,r*.06);
+  else s+=Df(cx-ex,ey,Math.max(sw*.9,r*.07))+Df(cx+ex,ey,Math.max(sw*.9,r*.07));
+  reg.ojos=[cx-ex-r*.25,ey-r*.2,2*ex+r*.5,r*.4];
+  s+=L([[cx,ey+r*.1],[cx-r*.08,hy+r*.2],[cx+r*.06,hy+r*.24]]);reg.nariz=[cx-r*.18,ey+r*.05,r*.36,r*.45];
+  const my=hy+r*.55;
+  if(o.mouth==='dientes'){const w=r*.42;s+=L([[cx-w,my-r*.06],[cx,my-r*.1],[cx+w,my-r*.06]])+L([[cx-w,my-r*.06],[cx-w*.6,my+r*.22],[cx+w*.6,my+r*.22],[cx+w,my-r*.06]]);const z=[];for(let i=0;i<=8;i++)z.push([cx-w*.85+i*(w*1.7/8),my+(i%2?r*.1:-r*.05)]);s+=L(z)}
+  else s+=L([[cx-r*.24,my],[cx+r*.24,my+r*.02]]);
+  reg.boca=[cx-r*.5,my-r*.2,r,r*.48];
+  let by=hy+r;
+  if(o.neck){const nw=r*.28,nh=r*.4;s+=L([[cx-nw,by-r*.04],[cx-nw,by+nh]])+L([[cx+nw,by-r*.04],[cx+nw,by+nh]]);reg.cuello=[cx-nw*2,by-r*.1,nw*4,nh+r*.2];by+=nh}
+  else reg.cuello=[cx-r*.5,by-r*.2,r,r*.4];
+  const yb1=top+H*o.waist,sh=r*o.shoulder,hip=r*o.hip;
+  s+=L([[cx-sh,by],[cx+sh,by],[cx+hip,yb1],[cx-hip,yb1]],true);
+  if(o.body==='remera'){s+=L([[cx-r*.32,by],[cx,by+r*.38],[cx+r*.32,by]])+L([[cx-hip*1.01,yb1-r*.3],[cx+hip*1.01,yb1-r*.3]])}
+  reg.cuerpo=[cx-Math.max(sh,hip),by,2*Math.max(sh,hip),yb1-by];
+  const legEnd=top+H-(o.feet?r*.45:0),lw=r*o.legW,g=r*o.legGap/2;
+  [-1,1].forEach(sd=>{const xo=cx+sd*(g+lw),xi=cx+sd*g;s+=L([[xo,yb1],[xo,legEnd]])+L([[xi,yb1],[xi,legEnd]]);if(!o.feet)s+=L([[xo,legEnd],[xi,legEnd]])});
+  reg.piernas=[cx-g-lw-r*.12,yb1,2*(g+lw)+r*.24,legEnd-yb1];
+  const knee=(yb1+legEnd)/2;reg.rodillaY=knee;
+  if(o.feet==='zapatos'){[-1,1].forEach(sd=>{s+=`<ellipse class="dot" cx="${f(cx+sd*(g+lw*.5+r*.28))}" cy="${f(legEnd+r*.22)}" rx="${f(r*.52)}" ry="${f(r*.24)}"/>`});reg.pies=[cx-g-lw-r*.9,legEnd-r*.15,2*(g+lw)+r*1.8,r*.7]}
+  else reg.pies=[cx-g-lw-r*.7,legEnd-r*.25,2*(g+lw)+r*1.4,r*.9];
+  const sy=by+r*.2,aw=r*o.armW;let ax0=1e9,ay0=1e9,ax1=-1e9,ay1=-1e9;const A=(x,y)=>{ax0=Math.min(ax0,x);ay0=Math.min(ay0,y);ax1=Math.max(ax1,x);ay1=Math.max(ay1,y)};
+  let hx0=1e9,hy0=1e9,hx1=-1e9,hy1=-1e9;const Hh=(x,y)=>{hx0=Math.min(hx0,x);hy0=Math.min(hy0,y);hx1=Math.max(hx1,x);hy1=Math.max(hy1,y)};
+  if(o.arms==='abiertos'){const al=o.alpha*Math.PI/180;const handY=knee+r*.4;[-1,1].forEach(sd=>{const dx=sd*Math.sin(al),dy=Math.cos(al);const La=(handY-sy)/dy;const st=[cx+sd*sh,sy];const en=[st[0]+dx*La,st[1]+dy*La];const px=dy*sd,py=-dx*sd;
+      const o1=[[st[0]+px*aw/2,st[1]+py*aw/2-r*.1],[en[0]+px*aw/2,en[1]+py*aw/2]],o2=[[st[0]-px*aw/2,st[1]+aw*.9],[en[0]-px*aw/2,en[1]-py*aw/2]];
+      s+=L(o1)+L(o2);[...o1,...o2].forEach(p=>A(p[0],p[1]));
+      if(o.hands==='grandes'){const hr=r*.82,pc=[en[0]+dx*hr*.75,en[1]+dy*hr*.75];s+=E(pc[0],pc[1],hr,hr*.92);Hh(pc[0]-hr,pc[1]-hr);Hh(pc[0]+hr,pc[1]+hr);reg[sd<0?'manoI':'manoD']=[pc[0]-hr*1.6,pc[1]-hr*1.1,hr*3.2,hr*2.7];
+        for(let k=-2;k<=2;k++){const an=Math.atan2(dy,dx)+k*.42;const p1=[pc[0]+Math.cos(an)*hr*.95,pc[1]+Math.sin(an)*hr*.95],p2=[pc[0]+Math.cos(an)*hr*1.6,pc[1]+Math.sin(an)*hr*1.6];s+=L([p1,p2]);Hh(p2[0],p2[1])}}})}
+  if(o.arms==='pegados'){const hw=y=>sh+(hip-sh)*(y-by)/(yb1-by);const yE=by+(yb1-by)*.62;[-1,1].forEach(sd=>{const p=[[cx+sd*sh,by],[cx+sd*(hw(sy)+aw),sy+r*.05],[cx+sd*(hw(yE)+aw),yE],[cx+sd*(hw(yE)+aw*.5),yE+aw*.55],[cx+sd*hw(yE),yE]];s+=L(p);p.forEach(q=>A(q[0],q[1]))});Hh(cx-hw(yE)-aw*1.2,yE-aw*.5);Hh(cx+hw(yE)+aw*1.2,yE+aw*1.2)}
+  reg.brazos=[ax0-r*.1,ay0-r*.1,ax1-ax0+r*.2,ay1-ay0+r*.2];reg.manos=[hx0,hy0,hx1-hx0,hy1-hy0];
+  const topY=o.hair==='pinchos'?hy-r*1.32:hy-r,botY=o.feet?legEnd+r*.46:legEnd;
+  reg.total=[Math.min(cx-r*1.3,ax0,hx0),topY,Math.max(cx+r*1.3,ax1,hx1)-Math.min(cx-r*1.3,ax0,hx0),botY-topY];
+  return {s,reg,topY,botY};
+}
+
+// ---------- Anotaciones ----------
+function ringPath(cx,cy,rx,ry){return withSeed(Math.round(cx*7+cy*13),()=>wob(ellPts(cx,cy,rx,ry,-.6,1.08),Math.min(rx,ry)*.035))}
+function annGroup(id,color,inner){return `<g class="ann ${color}" data-ann="${id}">${inner}</g>`}
+function txt(x,y,label,anchor){return `<text x="${f(x)}" y="${f(y)}" text-anchor="${anchor||'start'}">${label}</text>`}
+function ringLabeled(b,label,opt){opt=opt||{};const pad=opt.pad==null?2.5:opt.pad;const cx=b[0]+b[2]/2,cy=b[1]+b[3]/2,rx=b[2]/2+pad,ry=b[3]/2+pad;let lx=cx+rx*.72+1,ly=cy-ry*.72-1,anc='start';
+  if(opt.side==='left'){lx=cx-rx*.72-1;anc='end'}if(opt.side==='below'){lx=cx;ly=cy+ry+5;anc='middle'}if(opt.side==='above'){lx=cx;ly=cy-ry-2;anc='middle'}if(opt.side==='right'){lx=cx+rx+1.5;ly=cy+1.5}
+  if(opt.lx!=null){lx=opt.lx;ly=opt.ly;anc=opt.anc||'start'}
+  return `<path d="${ringPath(cx,cy,rx,ry)}"/>`+(label?txt(lx,ly,label,anc):'')}
+function measure(x1,y1,x2,y2,label,lx,ly){return `<line x1="${f(x1)}" y1="${f(y1)}" x2="${f(x2)}" y2="${f(y2)}"/>`+txt(lx,ly,label,'start')}
+
+// ---------- Construcción de la hoja Bender ----------
+const ORDER=['A','1','2','3','4','5','6','7','8'];
+function gbox(F){const b=F.lbox;return [F.x+b[0]*F.s,F.y+b[1]*F.s,b[2]*F.s,b[3]*F.s]}
+function toG(F,lx,ly){return [F.x+lx*F.s,F.y+ly*F.s]}
+function lb(F,b){const p=toG(F,b[0],b[1]);return [p[0],p[1],b[2]*F.s,b[3]*F.s]}
+function buildBender(cs){
+  const B=cs.bender;let figs='';
+  withSeed(cs.seed,()=>{B.figs.forEach(F=>{const r=benderFig(F.fig,F.o||{},{s:F.s,sw:B.sw,amp:B.amp});F.lbox=r.box;F.gb=gbox(F);
+    figs+=`<g data-fig="${F.key}"><g transform="translate(${F.x} ${F.y}) scale(${F.s})">${r.s}</g><text class="exam" x="${f(F.gb[0]-1)}" y="${f(F.gb[1]-2.2)}">${F.label}</text></g>`})});
+  const fig=k=>B.figs.find(F=>F.key===k);
+  let anns='';
+  B.errors.forEach(e=>{anns+=annGroup('e-'+e.item,'red',e.draw(fig))});
+  B.ei.forEach(x=>{anns+=annGroup('i-'+x.id,'blue',x.draw(fig))});
+  return `<svg class="sheetsvg ${B.fino?'fino':''}" viewBox="-6 -6 222 309" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Protocolo Bender de ${cs.nombre}">
+    <rect class="sheet" x="0" y="0" width="210" height="297" rx="1"/>
+    <text class="exam" x="6" y="291">Bender · ${cs.nombre} (${cs.ec.a}-${cs.ec.m}) · hoja A4 · tiempo ${B.tiempo}</text>
+    ${figs}${anns}</svg>`;
+}
+
+// ---------- Construcción de la hoja DFH ----------
+function buildDFH(cs){
+  const D=cs.dfh;const fg=withSeed(cs.seed+5,()=>figura(D.fig));D.reg=fg.reg;D.topY=fg.topY;D.botY=fg.botY;
+  let anns='';D.anns.forEach(x=>{anns+=annGroup(x.id,x.color,x.draw(D))});
+  return `<svg class="sheetsvg ${D.fino?'fino':''}" viewBox="-6 -6 222 309" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Dibujo de la figura humana de ${cs.nombre}">
+    <rect class="sheet" x="0" y="0" width="210" height="297" rx="1"/>
+    <text class="exam" x="6" y="291">DFH · ${cs.nombre} (${cs.ec.a}-${cs.ec.m}) · hoja A4 vertical</text>
+    <g data-fig="fig" class="figwrap">${fg.s}</g>${anns}</svg>`;
+}
+
+// ---------- Utilidades de pasos ----------
+function union(bs){let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;bs.forEach(b=>{x0=Math.min(x0,b[0]);y0=Math.min(y0,b[1]);x1=Math.max(x1,b[0]+b[2]);y1=Math.max(y1,b[1]+b[3])});return [x0,y0,x1-x0,y1-y0]}
+function pad(b,p,min){let [x,y,w,h]=b;x-=p;y-=p;w+=2*p;h+=2*p;min=min||0;if(w<min){x-=(min-w)/2;w=min}if(h<min){y-=(min-h)/2;h=min}return [x,y,w,h]}
+const FULL=[-6,-6,222,309];
+function verdict(kind,pt,html){return `<div class="verdict ${kind}"><span class="pt">${pt}</span><span>${html}</span></div>`}
+
+function normChart(score,g){
+  const W=420,X=v=>24+v*(W-48)/16;const lo=Math.max(0,g[3]-g[4]),hi=g[3]+g[4];
+  let t='';for(let v=0;v<=16;v+=2)t+=`<line class="axis" x1="${X(v)}" y1="58" x2="${X(v)}" y2="62"/><text x="${X(v)}" y="74" text-anchor="middle">${v}</text>`;
+  return `<svg class="normchart" viewBox="0 0 ${W} 82" role="img" aria-label="Puntaje ${score} frente a la norma ${g[2]}">
+   <rect class="band" x="${X(lo)}" y="26" width="${X(hi)-X(lo)}" height="26" rx="3"/>
+   <line class="mean" x1="${X(g[3])}" y1="22" x2="${X(g[3])}" y2="56"/>
+   <text x="${X(g[3])}" y="16" text-anchor="middle">media ${String(g[3]).replace('.',',')}</text>
+   <line class="axis" x1="${X(0)}" y1="58" x2="${X(16)}" y2="58"/>${t}
+   <path class="kid" d="M${X(score)} 54 l-6 -11 h12 z"/>
+   <text class="kidt" x="${X(score)+(score>12?-9:9)}" y="42" text-anchor="${score>12?'end':'start'}">${score}</text>
+  </svg><div class="small">Banda verde: media ± 1 DS (${String(lo.toFixed(1)).replace('.',',')} a ${String(hi.toFixed(1)).replace('.',',')} errores). Triángulo: puntaje del niño.</div>`;
+}
+function empmTable(score){let rows='';for(let k=0;k<=13;k++)rows+=`<tr class="${k===score?'hit':''}"><td class="mono">${k}</td><td class="mono">${EMPM[k]}</td></tr>`;
+  return `<div class="tbl-wrap" style="max-height:260px;overflow-y:auto"><table><thead><tr><th>Puntaje</th><th>EMPM (años-meses)</th></tr></thead><tbody>${rows}</tbody></table></div>`}
+function convTable(score){return `<div class="tbl-wrap"><table><thead><tr><th>Puntaje</th><th>Nivel de capacidad mental</th><th>CI</th></tr></thead><tbody>${DFH_CONV.map(r=>`<tr class="${score>=r[0]&&score<=r[1]?'hit':''}"><td class="mono">${r[0]===7?'8–7':r[0]<0?'1–0':r[0]}</td><td>${r[2]}</td><td class="mono">${r[3]}</td></tr>`).join('')}</tbody></table></div>`}
+function itemsTable(keys,it,kind){return `<div class="tbl-wrap"><table><thead><tr><th>Ítem</th><th>¿Está?</th><th>Efecto</th></tr></thead><tbody>${keys.map(k=>{const p=!!it[k];const eff=kind==='esp'?(p?'—':'−1'):(p?'+1':'—');return `<tr><td>${ITEMS[k]}</td><td class="${p?'ok':kind==='esp'?'no':''}">${p?'✓ sí':'✗ no'}</td><td class="mono ${kind==='esp'&&!p?'no':kind==='exc'&&p?'ok':''}">${eff}</td></tr>`}).join('')}</tbody></table></div>`}
+
+// ======================================================================
+// CASOS
+// ======================================================================
+const CASES=[];
+
+// ---------------- CASO 1 · MATEO ----------------
+CASES.push({
+ id:'mateo',nombre:'Mateo',sexo:'v',ec:{a:8,m:4},seed:11,
+ header:{n:1,chips:['8 años 4 meses','varón','3er grado','derivado por la escuela']},
+ entrevista:`
+  <dl class="meta"><dt>Niño</dt><dd>Mateo, 8 años 4 meses (EC 8-4). 3er grado, escuela pública.</dd><dt>Consulta</dt><dd>Madre (Laura, 36). Derivación escolar.</dd><dt>Encuadre</dt><dd>Entrevista inicial con la madre + 2 sesiones con Mateo (Bender, DFH).</dd></dl>
+  <div class="line t"><span class="who">T</span><span class="txt">¿Qué los trae a la consulta?</span></div>
+  <div class="line"><span class="who">M</span><span class="txt">Me mandaron de la escuela. La maestra dice que Mateo <mark>no para quieto, se levanta todo el tiempo, no termina las tareas</mark> y que <mark>la letra es un desastre</mark>, no se le entiende. En el recreo se pelea; la semana pasada le pegó a un compañero.</span></div>
+  <div class="line t"><span class="who">T</span><span class="txt">¿Desde cuándo lo notan?</span></div>
+  <div class="line"><span class="who">M</span><span class="txt">Inquieto fue siempre, pero este año está peor. Con el papá <mark>nos separamos en abril</mark>; él se fue a vivir a Rosario y lo ve cada quince días. Desde ahí está más enojado: <mark>si pierde a un juego tira todo, golpea las puertas</mark>.</span></div>
+  <div class="line t"><span class="who">T</span><span class="txt">¿Cómo fue su desarrollo de chiquito?</span></div>
+  <div class="line"><span class="who">M</span><span class="txt">Embarazo normal, nació a término. Caminó al año y un mes. Para hablar tardó un poco, a los dos años y medio recién armaba frases. <mark>Nunca le gustó pintar ni recortar, se sale de los bordes</mark>; todavía no se ata bien los cordones.</span></div>
+  <div class="line t"><span class="who">T</span><span class="txt">¿Y en lo escolar?</span></div>
+  <div class="line"><span class="who">M</span><span class="txt"><mark>Lee bien, y en matemática de memoria es rapidísimo.</mark> El problema es cuando tiene que escribir o copiar del pizarrón: se cansa y deja a la mitad.</span></div>
+  <div class="line t"><span class="who">T</span><span class="txt">¿Cómo duerme?</span></div>
+  <div class="line"><span class="who">M</span><span class="txt">Desde la separación <mark>tiene pesadillas</mark>; a veces se pasa a mi cama.</span></div>
+  <div class="obs"><h4>Observación en sesión</h4><p>Entra corriendo y toca los juguetes sin preguntar. Habla rápido y fuerte. Acepta las tareas pero quiere terminar enseguida: <i>"¿Ya está? ¿Falta mucho?"</i>. En el Bender mira cada tarjeta apenas un segundo y <mark>aprieta tanto el lápiz que rompe la punta</mark>. Cuando algo le sale mal dice <i>"es que este lápiz es malo"</i>.</p></div>`,
+ pistas:[
+  ['red','Bender evolutivo','Dificultad grafomotora de larga data: no le gusta pintar, se sale de los bordes, letra ilegible, le cuesta copiar del pizarrón. Esperamos una EMPM baja.'],
+  ['blue','IE Bender y DFH','Impulsividad y baja tolerancia a la frustración: se levanta, tira todo si pierde, "¿falta mucho?", rompe la punta del lápiz.'],
+  ['blue','IE y contenido','Separación parental reciente, enojo, peleas, pesadillas: buscar agresividad y descarga hacia afuera en los dibujos.'],
+  ['green','DFH evolutivo','Lectura y cálculo oral conservados: la capacidad intelectual probablemente no está comprometida.']],
+ bender:{sw:1.1,amp:.42,tiempo:"3' 40''",
+  figs:[
+   {key:'A',fig:'A',label:'A',x:14,y:16,s:1.5,o:{gap:5}},
+   {key:'1',fig:'1',label:'1',x:118,y:22,s:1,o:{circFrom:5,r0:.9,grow:.35}},
+   {key:'2',fig:'2',label:'2',x:16,y:84,s:1,o:{dashFrom:3}},
+   {key:'3',fig:'3',label:'3',x:138,y:160,s:1.2,o:{counts:[1,3,4,4],rc:[0,1.2,1.8,2.5]}},
+   {key:'4',fig:'4',label:'4',x:150,y:96,s:1.2,o:{gap:4.5}},
+   {key:'5',fig:'5',label:'5',x:22,y:186,s:1.2,o:{circ:true}},
+   {key:'6',fig:'6',label:'6',x:44,y:118,s:1.3,o:{angular:true}},
+   {key:'7',fig:'7',label:'7',x:108,y:212,s:1.4,o:{drop:2}},
+   {key:'8',fig:'8',label:'8',x:86,y:58,s:1.35,o:{}}],
+  intro:`<p>Hoja A4 vertical, lápiz y goma. Se presentan las 9 tarjetas en orden (A, 1 a 8) con la consigna <i>"copiá este dibujo"</i>. Tiempo total: <b>3' 40''</b>.</p><p>Primero puntuamos, figura por figura, los <b class="r">ítems evolutivos</b> en rojo. Los <b class="b">indicadores emocionales</b> se miran al final y no suman al puntaje.</p>`,
+  notes:{
+   A:{t:'Círculo y cuadrado no se tocan',h:`<p>La copia está agrandada (×1,5). Las formas están bien logradas: el círculo no está achatado (no hay 1a) y las dos partes guardan su proporción (no hay 1b). No hay rotación (no hay 2). Pero entre el círculo y el vértice del cuadrado quedan unos 7,5 mm.</p>`},
+   '1':{t:'Los puntos se vuelven círculos',h:`<p>Los primeros 5 elementos son puntos; desde el 6.º se convierten en <b>círculos cada vez más grandes</b> (7 círculos). Son 12 elementos, así que no hay perseveración (haría falta más de 15). La hilera es horizontal: no hay rotación.</p>`},
+   '2':{t:'Sin error evolutivo, pero con rayas',h:`<p>Hay 11 columnas de 3, sin hileras agregadas ni omitidas (no hay 8), sin perseveración (no pasa de 14 columnas) y sin rotación (no hay 7). Desde la 4.ª columna dibuja <b>rayas en lugar de círculos</b>. Eso <b>no es un error evolutivo</b>: lo anotamos para los IE.</p>`},
+   '3':{t:'La cabeza de flecha se desarma',h:`<p>El modelo tiene columnas de 1, 3, 5 y 7 puntos. Mateo hace <b>1, 3, 4 y 4</b>, y casi todos los puntos son círculos que crecen. <i>Ojo: un número incorrecto de puntos, por sí solo, no se computa.</i> Acá sí hay error porque las últimas dos columnas son iguales: las hileras dejan de aumentar.</p>`},
+   '4':{t:'La curva se separa del cuadrado',h:`<p>La curva queda a unos 5,4 mm del ángulo del cuadrado. No hay rotación.</p>`},
+   '5':{t:'Arco y extensión con círculos',h:`<p>La forma del arco y la extensión se reconoce (no hay 17a), sin línea continua (no hay 17b) y sin rotación (no hay 16). Pero los puntos son <b>círculos</b>.</p>`},
+   '6':{t:'Curvas que se vuelven ángulos',h:`<p>La línea horizontal es un zigzag: <b>las curvas están sustituidas por ángulos</b>. La vertical conserva las curvas. Las dos líneas se cruzan bien (no hay 19) y hay 4 ondas, así que no hay perseveración (haría falta 6 o más).</p>`},
+   '7':{t:'Al hexágono le falta un ángulo',h:`<p>La copia está agrandada (×1,4). Los hexágonos se superponen bien (no hay 23) y sin rotación (no hay 22). Pero el hexágono inclinado quedó de <b>5 lados</b>.</p>`},
+   '8':{t:'Bien copiada, mal ubicada',h:`<p>El hexágono y el rombo están bien formados y no hay rotación: no hay error evolutivo. Mateo la ubicó <b>arriba, en el medio de la hoja</b>, después de haber terminado abajo. Eso se ve en los IE.</p>`}},
+  errors:[
+   {item:'3',fig:'A',cat:'Integración',crit:'Círculo y vértice separados más de 3 mm.',draw:fig=>{const F=fig('A');const a=toG(F,17,10),b=toG(F,22,10);return ringLabeled(lb(F,[15,5,9,10]),'',{pad:2})+measure(a[0],a[1],b[0],b[1],'3 · ≈7,5 mm',a[0]-3,a[1]+12)}},
+   {item:'4',fig:'1',cat:'Distorsión',crit:'5 o más puntos convertidos en círculos (acá, 7).',draw:fig=>{const F=fig('1');return ringLabeled(lb(F,[24,0,46,8]),'4 · círculos',{side:'below'})}},
+   {item:'10',fig:'3',cat:'Distorsión',crit:'5 o más puntos convertidos en círculos (acá, 11).',draw:fig=>{const F=fig('3');return ringLabeled(lb(F,[7,0,24,24]),'10 · círculos',{side:'left'})}},
+   {item:'12a',fig:'3',cat:'Integración',crit:'Desintegración: las hileras no aumentan sucesivamente (1-3-4-4).',draw:fig=>{const F=fig('3');let s='';[[2,'1'],[9.5,'3'],[17,'4'],[24.5,'4']].forEach(([x,n])=>{const p=toG(F,x+1.5,-1);s+=txt(p[0],p[1],n,'middle')});const p=toG(F,30,27);return s+txt(p[0],p[1]+3,'12a · 1-3-4-4','end')}},
+   {item:'14',fig:'4',cat:'Integración',crit:'Curva y ángulo separados más de 3 mm.',draw:fig=>{const F=fig('4');const a=toG(F,14,16),b=toG(F,17.2,19.2);return measure(a[0],a[1],b[0],b[1],'14 · ≈5,4 mm',a[0]-30,a[1]+10)}},
+   {item:'15',fig:'5',cat:'Distorsión',crit:'5 o más puntos convertidos en círculos.',draw:fig=>{const F=fig('5');return ringLabeled(lb(F,[1,15,28,17]),'15 · círculos',{side:'right'})}},
+   {item:'18a',fig:'6',cat:'Distorsión',crit:'3 o más curvas sustituidas por ángulos.',draw:fig=>{const F=fig('6');return ringLabeled(lb(F,[0,11,52,10]),'18a · ángulos',{side:'below'})}},
+   {item:'21b',fig:'7',cat:'Distorsión',crit:'Hexágono deformado: ángulos omitidos (quedó de 5 lados).',draw:fig=>{const F=fig('7');return ringLabeled(lb(F,[8,9,23,20]),'21b · 5 lados',{side:'right'})}}],
+  total:`<p>En la tabla de equivalentes de edad, 8 errores corresponden a una <b>EMPM de 6-0 a 6-5</b>. En la tabla gruesa, "6 a 6½": las dos tablas coinciden.</p>`,
+  normaTxt:`<p>Mateo tiene 8-4, así que se compara con el grupo 8-0 a 8-5: media 3,7, DS 3,60. Lo esperable es entre 0,1 y 7,3 errores. Con 8 queda <b>por encima de +1 DS</b>: comete más errores que lo esperable para su edad.</p><p><b>Lectura madurativa:</b> EMPM de alrededor de 6 años con EC de 8-4. Es un <b>desfasaje de unos 2 años</b> en la maduración visomotora.</p><p><b>¿Lesión?</b> No aparecen indicadores altamente significativos de lesión: no hay rotaciones en las Figs. 1, 4 u 8, ni perseveración, ni línea continua en lugar de puntos, ni hileras omitidas en la Fig. 2. Los errores que predominan (puntos convertidos en círculos, uniones fallidas) son típicamente madurativos, propios de niños más chicos.</p>`,
+  ei:[
+   {id:'orden',nombre:'Orden confuso',figs:ORDER,crit:'Figuras desparramadas sin secuencia lógica.',edad:'Significativo de 8 a 10 años: vale.',sig:'Planificación pobre, dificultad para organizar el material.',
+    txt:'Arranca arriba a la izquierda, salta a la derecha, vuelve a la izquierda y termina poniendo la 8 arriba al centro. El recorrido (en azul) no sigue ninguna secuencia. <i>Excepción de Koppitz: no se computa si la Fig. 8 va arriba por falta de espacio.</i> Acá había lugar abajo (unos 4 cm libres debajo de la Fig. 7), así que la excepción no aplica.',
+    draw:fig=>{const c=ORDER.map(k=>{const b=fig(k).gb;return [b[0]+b[2]/2,b[1]+b[3]/2]});let s=`<polyline points="${c.map(p=>f(p[0])+','+f(p[1])).join(' ')}" style="stroke-dasharray:6 5"/>`;c.forEach((p,i)=>{s+=`<circle class="num" cx="${f(p[0])}" cy="${f(p[1])}" r="4.2"/><text class="numt" x="${f(p[0])}" y="${f(p[1]+1.6)}" text-anchor="middle">${i+1}</text>`});return s}},
+   {id:'rayas',nombre:'Círculos sustituidos por rayas (Fig. 2)',figs:['2'],crit:'La mitad o más de los círculos reemplazados por rayas.',edad:'Sin restricción de edad.',sig:'Impulsividad, falta de interés o de atención.',
+    txt:'24 de los 33 círculos son rayas: más de la mitad.',draw:fig=>{const F=fig('2');return ringLabeled(lb(F,[14,0,41,12]),'rayas: 24/33',{side:'below'})}},
+   {id:'aumento',nombre:'Aumento progresivo de tamaño',figs:['1','3'],crit:'Los últimos elementos son al menos 3 veces más grandes que los primeros (Figs. 1, 2 o 3).',edad:'Pesa más cuanto mayor es el niño.',sig:'Baja tolerancia a la frustración, explosividad.',
+    txt:'En la Fig. 1, el último círculo mide unos 6 mm contra 2 mm del primer punto: el triple. En la Fig. 3 pasa lo mismo. Se computa <b>una sola vez</b> aunque aparezca en dos figuras.',
+    draw:fig=>{const F1=fig('1'),F3=fig('3');return ringLabeled(lb(F1,[0,-1,72,10]),'×3',{side:'right'})+ringLabeled(lb(F3,[0,0,32,24]),'×3',{side:'left'})}},
+   {id:'grande',nombre:'Gran tamaño',figs:['A','7','8'],crit:'Una o más figuras un tercio más grandes que el modelo en ambas direcciones.',edad:'Sin restricción de edad.',sig:'Conducta acting-out: actuar hacia afuera.',
+    txt:'La A (×1,5), la 7 (×1,4) y la 8 (×1,35) superan en un tercio (×1,33) al modelo. La 6 (×1,3) no llega.',
+    draw:fig=>['A','7','8'].map(k=>{const F=fig(k);return ringLabeled(pad(F.gb,1),'×'+String(F.s).replace('.',','),{side:k==='7'?'right':'below',pad:3})}).join('')}],
+  eiSintesis:`<p><b>4 IE</b> (3 o más): indicativo de problemas emocionales; justifica una evaluación más profunda.</p><p><b>Constelación:</b> impulsividad (rayas, tiempo breve), baja tolerancia a la frustración (aumento progresivo), conducta actuadora (gran tamaño) y planificación pobre (orden confuso).</p><p><b>Tiempo:</b> 3' 40''. El rango esperable de 6 a 8½ años es de 4 a 9 minutos, así que ejecutó demasiado rápido, lo que refuerza la impulsividad y la poca concentración.</p><p class="small">Descartados: no hay línea ondulada, tamaño pequeño, línea fina, repaso, segunda tentativa, expansión (usó una sola hoja), encuadramiento ni elaboración espontánea.</p>`},
+ dfh:{fig:{cx:105,top:24,H:245,sw:1.15,amp:.55,hair:'pinchos',eyes:'pupilas',mouth:'dientes',neck:false,body:'remera',waist:.55,shoulder:1.3,hip:1.05,legW:.55,legGap:.35,feet:false,arms:'abiertos',alpha:12,armW:.36,hands:'grandes'},
+  items:{cabeza:1,ojos:1,pupilas:1,cejas:0,nariz:1,fosas:0,boca:1,dosLabios:0,orejas:0,pelo:1,cuello:0,cuerpo:1,brazos:1,brazos2d:1,brazosHombro:1,brazosAbajo:1,codo:0,manos:1,dedos:1,dedosCorrectos:1,piernas:1,piernas2d:1,rodilla:0,pies:0,pies2d:0,perfil:0,proporciones:0,ropa1:0,ropa2:1,ropa4:0},
+  alto:'≈ 24,5 cm',
+  ie:['grande','dientes','brazosLargos','manosGrandes'],
+  intro:`<p>Consigna de Koppitz: <i>"Dibujá una persona entera"</i>. Hoja A4 vertical, lápiz y goma. Mateo dibujó en 2 minutos, apretando el lápiz, sin borrar.</p><p>Al terminar contó: <i>"Es un súper héroe. Está enojado porque le robaron la ciudad y va a pegarle a los malos."</i></p><p>Lo leemos en tres pasadas: <b>estructura y estilo</b>, <b class="r">ítems evolutivos</b> (puntaje) e <b class="b">indicadores emocionales</b>.</p>`,
+  tamano:`<p>Mide <b>≈ 24,5 cm</b>: ocupa más de 2/3 de la hoja, así que el tamaño es <b>grande</b>.</p><p><b>Lectura:</b> expansividad, necesidad de ocupar espacio, controles internos débiles; a veces compensa sentimientos de inadecuación.</p><p class="small">Este rasgo es además el IE "figura grande" (23 cm o más, válido desde los 8 años). Lo contamos en la tercera pasada.</p>`,
+  emplaz:`<p>Está centrado en lo horizontal y ocupa casi todo lo vertical, llegando cerca del borde inferior. El emplazamiento central se considera esperable. Que casi toque los bordes sugiere que vive el ambiente como un espacio chico, que lo constriñe.</p>`,
+  trazo:`<p><b>Presión fuerte</b>, trazo grueso, líneas cortas y rápidas, sin borrado ni sombreado.</p><p><b>Lectura:</b> mucha energía, tensión, impulsividad y agresividad, con poco control previo. Coincide con la punta rota en el Bender.</p>`,
+  detalles:`<p><b>Simetría</b> conservada. <b>Detalles</b> destacados: dientes y manos enormes con los dedos abiertos. <b>Movimiento:</b> los brazos se separan del cuerpo hacia afuera, en actitud de ataque o de contacto. Coincide con el relato del héroe que "va a pegarle a los malos".</p>`,
+  estilo:`<p>Estilo <b>esquemático y tosco</b>, de ejecución rápida, en vista frontal. Es una figura estereotipada de "héroe". Además <b>no tiene pies</b>: la figura queda sin base de apoyo.</p>`,
+  restoNota:`<p class="small"><b>Ojo con las capas.</b> La omisión de pies como IE vale recién desde los 9 años en varones: a los 8 <b>resta como ítem esperado</b>, pero no cuenta como IE. Tampoco hay cuello, pero a los 8 no es esperado ni IE (como IE vale desde los 10 en varones), así que no se considera.</p>`,
+  excNota:`<p class="small">Las pupilas y los 5 dedos no suman: solo son excepcionales a los 5 años. La boca abierta con dientes no cuenta como "dos labios", porque los labios no están diferenciados.</p>`,
+  calcNota:`<p><b>Relación con el CI.</b> El rango 80–110 es una estimación gruesa: Koppitz reporta correlaciones de 0,45 a 0,80 con el WISC. Acá converge con la entrevista (lee bien, calcula rápido de memoria). Si hubiera un WISC-V, se contrastaría con su CIT.</p>`,
+  ieTxt:{grande:'Mide 24,5 cm. Válido desde los 8 años.',dientes:'Boca abierta con dientes en zigzag.',brazosLargos:'Las manos llegan por debajo del nivel de las rodillas.',manosGrandes:'Cada mano (palma y dedos) es tan grande como la cara.'},
+  ieSintesis:`<p><b>4 IE</b> (2 o más): altamente sugestivo de problemas emocionales y de relaciones interpersonales insatisfactorias.</p><p><b>Constelación:</b> agresividad dirigida hacia afuera (dientes, brazos largos, manos grandes) junto con expansividad y controles internos pobres (figura grande). Coincide con el relato del héroe enojado.</p><p class="small">No es IE en este caso: la omisión de pies y la de cuello, por la edad.</p>`},
+ integ:{
+  rows:[
+   ['Maduración visomotora','Motricidad fina pobre desde siempre: no le gusta pintar, letra ilegible, le cuesta copiar del pizarrón.','8 errores. EMPM 6-0 a 6-5 contra EC 8-4: ~2 años por debajo, por encima de +1 DS.','Trazo tosco, de ejecución rápida.'],
+   ['Impulsividad y control','No para quieto, se levanta, "¿falta mucho?".',"Tiempo 3' 40'', rayas en la Fig. 2, orden confuso.",'Figura grande, presión fuerte, sin borrado.'],
+   ['Agresividad y frustración','Se pelea, golpea puertas; enojo desde la separación.','Aumento progresivo de tamaño, gran tamaño.','Dientes, brazos largos, manos grandes; relato del héroe que pega.'],
+   ['Capacidad intelectual estimada','Lee bien; cálculo oral rápido.','Errores de tipo madurativo, sin indicadores de lesión.','Puntaje 4: normal, CI estimado 80–110.']],
+  hip:`<p>Niño de 8 años 4 meses con una <b>capacidad intelectual estimada dentro de lo normal</b> y una <b>maduración visomotora inmadura</b> para su edad, con unos 2 años de desfasaje. Esa inmadurez explica en buena parte las dificultades en escritura y copia.</p><p>Se suma un <b>componente emocional reactivo a la separación de los padres</b>: impulsividad, baja tolerancia a la frustración y agresividad que se descarga hacia afuera. Los dos planos se potencian: la tarea gráfica le cuesta, se frustra y actúa.</p>`,
+  sug:['Administrar un WISC-V para precisar el CI y el perfil, en especial Velocidad de Procesamiento y Memoria de Trabajo, por la queja atencional.','Evaluación psicopedagógica y de motricidad fina (terapia ocupacional).','Espacio terapéutico para Mateo; orientación a ambos padres sobre la separación.','Articulación con la escuela: consignas cortas y más tiempo para copiar.'],
+  modelo:`<p>"Mateo presenta en el Test de Bender un puntaje de 8 errores según el sistema evolutivo de Koppitz, que corresponde a una edad de maduración perceptivo-motriz de 6-0 a 6-5 años, por debajo de lo esperado para su edad cronológica (8-4). El puntaje supera en más de un desvío la media de su grupo de edad. No se observan indicadores altamente significativos de lesión. Presenta 4 indicadores emocionales (orden confuso, círculos sustituidos por rayas, aumento progresivo y gran tamaño), cantidad significativa, que sugieren impulsividad, baja tolerancia a la frustración y tendencia a la actuación. En el DFH obtiene un puntaje de 4, que ubica su capacidad mental estimada en un nivel normal (CI 80–110). Se observan 4 indicadores emocionales (figura grande, dientes, brazos largos y manos grandes) que dan cuenta de una agresividad dirigida hacia el exterior y controles internos lábiles. Estos datos convergen con lo relatado por la madre…"</p>`}
+});
+
+// ---------------- CASO 2 · SOFÍA ----------------
+CASES.push({
+ id:'sofia',nombre:'Sofía',sexo:'n',ec:{a:10,m:2},seed:23,
+ header:{n:2,chips:['10 años 2 meses','niña','5.º grado','consulta sugerida por la pediatra']},
+ entrevista:`
+  <dl class="meta"><dt>Niña</dt><dd>Sofía, 10 años 2 meses (EC 10-2). 5.º grado, escuela privada.</dd><dt>Consulta</dt><dd>Ambos padres (Carolina, 41, y Martín, 43). Sugerida por la pediatra.</dd><dt>Encuadre</dt><dd>Entrevista con los padres + 2 sesiones con Sofía (Bender, DFH).</dd></dl>
+  <div class="line t"><span class="who">T</span><span class="txt">¿Qué los trae?</span></div>
+  <div class="line"><span class="who">Ma</span><span class="txt">Hace unos meses que Sofi tiene <mark>dolor de panza casi todas las mañanas antes de ir al colegio</mark>. La pediatra le hizo estudios y está todo bien; nos dijo que podía ser algo emocional.</span></div>
+  <div class="line"><span class="who">Pa</span><span class="txt"><mark>Es muy exigente con ella misma.</mark> Si saca un 8, llora y dice que es un desastre. Hace la tarea tres veces si no le queda prolija.</span></div>
+  <div class="line t"><span class="who">T</span><span class="txt">¿Pasó algo en la familia en este último tiempo?</span></div>
+  <div class="line"><span class="who">Ma</span><span class="txt">(Se le llenan los ojos de lágrimas.) <mark>En marzo falleció mi mamá.</mark> Vivía con nosotros y era la que cuidaba a Sofi a la tarde. <mark>Yo estuve muy mal, todavía estoy…</mark> Sofi no lloró en el velorio; nunca habla de la abuela.</span></div>
+  <div class="line t"><span class="who">T</span><span class="txt">¿Y con sus amigas?</span></div>
+  <div class="line"><span class="who">Pa</span><span class="txt">Tiene una sola amiga. <mark>No quiere ir a los cumpleaños</mark>, dice que se aburre. Antes iba.</span></div>
+  <div class="line t"><span class="who">T</span><span class="txt">¿Cómo duerme?</span></div>
+  <div class="line"><span class="who">Ma</span><span class="txt">Pide dormir con la luz prendida y la puerta abierta. <mark>A veces pregunta si nos vamos a morir.</mark></span></div>
+  <div class="line t"><span class="who">T</span><span class="txt">¿Cómo fue su desarrollo?</span></div>
+  <div class="line"><span class="who">Pa</span><span class="txt">Todo normal: caminó al año, habló temprano. <mark>En la escuela le va muy bien</mark>; la maestra dice que es una alumna ejemplar, pero que no levanta nunca la mano.</span></div>
+  <div class="obs"><h4>Observación en sesión</h4><p>Entra pegada a la madre y le cuesta quedarse sola. Responde con monosílabos y en voz baja. En el Bender <mark>pide la goma varias veces y pregunta "¿está bien así?"</mark>, y tarda mucho en cada figura. En el DFH <mark>borra la cabeza tres veces</mark>.</p></div>`,
+ pistas:[
+  ['green','Bender y DFH evolutivo','Desarrollo normal y muy buen rendimiento escolar: no esperamos compromiso madurativo ni intelectual.'],
+  ['blue','IE Bender y DFH','Inhibición y retraimiento: monosílabos, voz baja, no levanta la mano, una sola amiga.'],
+  ['blue','IE y estructura','Autoexigencia y ansiedad: llora con un 8, rehace la tarea, pide la goma, borra. Dolores de panza.'],
+  ['blue','Contenido DFH','Duelo reciente (abuela que la cuidaba), madre en duelo, miedo a la muerte de los padres: buscar soledad, culpa o pérdida.']],
+ bender:{sw:.32,amp:.16,fino:true,tiempo:"11' 20''",
+  figs:[
+   {key:'A',fig:'A',label:'A',x:14,y:14,s:.5,o:{}},
+   {key:'1',fig:'1',label:'1',x:14,y:32,s:.6,o:{}},
+   {key:'2',fig:'2',label:'2',x:14,y:42,s:.6,o:{}},
+   {key:'3',fig:'3',label:'3',x:14,y:56,s:.6,o:{}},
+   {key:'4',fig:'4',label:'4',x:56,y:14,s:.55,o:{gap:8}},
+   {key:'5',fig:'5',label:'5',x:56,y:40,s:.55,o:{}},
+   {key:'6',fig:'6',label:'6',x:56,y:63,s:.5,o:{}},
+   {key:'7a',fig:'7',label:'7 (1.º)',x:100,y:14,s:.55,o:{partial:true}},
+   {key:'7',fig:'7',label:'7',x:100,y:37,s:.55,o:{sep:true}},
+   {key:'8',fig:'8',label:'8',x:100,y:62,s:.55,o:{}}],
+  intro:`<p>Misma administración. Tiempo total: <b>11' 20''</b>. Pidió la goma varias veces y preguntó "¿está bien así?" después de cada figura. Todo el protocolo entra en el ángulo superior izquierdo de la hoja.</p><p>Como antes: primero los <b class="r">ítems evolutivos</b> y después los <b class="b">indicadores emocionales</b>.</p>`,
+  notes:{
+   A:{t:'Muy pequeña, bien lograda',h:`<p>Mide la mitad del modelo. Las formas, la unión y la proporción son correctas, y no hay rotación. El tamaño no es error evolutivo: es un IE.</p>`},
+   '1':{t:'Sin error',h:`<p>12 puntos en hilera recta, sin círculos ni rotación.</p>`},
+   '2':{t:'Sin error',h:`<p>11 columnas de 3 círculos. Conserva la inclinación y no agrega ni omite hileras.</p>`},
+   '3':{t:'Sin error',h:`<p>Columnas de 1, 3, 5 y 7 puntos: la cabeza de flecha está bien lograda.</p>`},
+   '4':{t:'La curva no llega al cuadrado',h:`<p>La curva queda a unos 4,4 mm del ángulo del cuadrado. Atención: en dibujos chicos hay que medir sobre la hoja; acá igual se pasa de 3 mm.</p>`},
+   '5':{t:'Sin error',h:`<p>El arco y la extensión son de puntos y están bien orientados.</p>`},
+   '6':{t:'Sin error',h:`<p>Las dos sinusoides tienen curvas y se cruzan bien. Mide la mitad del modelo: eso va a los IE.</p>`},
+   '7':{t:'Dos intentos, sin superposición',h:`<p>Sofía empezó la Fig. 7 arriba a la derecha, la abandonó a medio hacer y la rehizo más abajo. Se puntúa el dibujo terminado: en el segundo intento <b>los hexágonos no se superponen</b>, apenas se acercan.</p>`},
+   '8':{t:'Sin error',h:`<p>El hexágono y el rombo están bien formados.</p>`}},
+  errors:[
+   {item:'14',fig:'4',cat:'Integración',crit:'Curva y ángulo separados más de 3 mm.',draw:fig=>{const F=fig('4');const a=toG(F,14,16),b=toG(F,19.7,21.7);return measure(a[0],a[1],b[0],b[1],'14 · ≈4,4 mm',a[0]+2,a[1]+10)}},
+   {item:'23',fig:'7',cat:'Integración',crit:'Los hexágonos no se superponen.',draw:fig=>{const F=fig('7');return ringLabeled(lb(F,[9,15,9,14]),'23 · no se superponen',{side:'below',pad:1.2})}}],
+  total:`<p>En la tabla de equivalentes de edad, 2 errores corresponden a una <b>EMPM de 9-0 a 9-11</b>. En la tabla gruesa, "9 a 10". Algunos protocolos ponen 9-0 a 9-5.</p>`,
+  normaTxt:`<p>Sofía tiene 10-2, así que se compara con el grupo 10-0 a 10-5: media 1,6, DS 1,67. Lo esperable es entre 0 y 3,3 errores. Con 2 queda <b>dentro de la norma</b>.</p><p><b>Efecto techo:</b> desde los 9 años el Bender ya no discrimina bien, porque casi todos los niños cometen pocos errores. A los 10 solo sería significativo un rendimiento por debajo del nivel de 9 años. Que la EMPM dé "9 y pico" con una EC de 10-2 <b>no es un retraso</b>.</p><p><b>Lectura madurativa:</b> maduración visomotora acorde a su edad, sin indicadores de lesión.</p>`,
+  ei:[
+   {id:'pequeno',nombre:'Tamaño pequeño',figs:['A','6'],crit:'Una o más figuras de la mitad del tamaño del modelo, en ambas direcciones.',edad:'Significativo de 8 a 10 años: vale.',sig:'Ansiedad, retraimiento, constricción, timidez.',
+    txt:'La A y la 6 miden la mitad del modelo (×0,5). Las demás están apenas por encima (×0,55 a ×0,6). Se computa una vez.',draw:fig=>['A','6'].map(k=>ringLabeled(pad(fig(k).gb,.5),'×0,5',{side:'right',pad:2})).join('')},
+   {id:'fina',nombre:'Línea fina',figs:ORDER.concat(['7a']),crit:'Trazo tan fino que cuesta ver el dibujo.',edad:'Sin restricción de edad.',sig:'Timidez, retraimiento.',
+    txt:'Todo el protocolo tiene un trazo apenas visible: hay que acercarse para ver los puntos de la Fig. 1.',draw:fig=>{const b=union([fig('1').gb,fig('2').gb]);return ringLabeled(b,'trazo casi invisible',{side:'below',pad:3})}},
+   {id:'segunda',nombre:'Segunda tentativa',figs:['7a','7'],crit:'Abandona un dibujo y lo rehace en otro lugar de la hoja.',edad:'Significativo de 8 a 10 años: vale.',sig:'Impulsividad o ansiedad. Acá, por el contexto, ansiedad y autoexigencia.',
+    txt:'Abandona la Fig. 7 y la rehace más abajo. Si hubiera borrado y rehecho en el mismo lugar, <b>no</b> contaría.',draw:fig=>ringLabeled(pad(fig('7a').gb,.5),'1.º intento',{side:'right',pad:2})+ringLabeled(pad(fig('7').gb,.5),'2.º',{side:'right',pad:2})},
+   {id:'constr',comp:true,nombre:'Constricción (dato complementario)',figs:ORDER.concat(['7a']),crit:'Usa menos de la mitad de la hoja.',edad:'No está en la lista de Koppitz: la reincorporó el equipo de la UBA.',sig:'Retraimiento, inhibición.',
+    txt:'Usa el ángulo superior izquierdo, mucho menos de la mitad de la hoja. Mencionalo como dato de uso del espacio, pero <b>no lo sumes</b> al conteo de Koppitz salvo que tu cátedra lo indique.',draw:()=>`<rect x="6" y="6" width="128" height="80" rx="2" style="stroke-dasharray:7 6"/>`+txt(138,22,'usa < ½ hoja','start')}],
+  eiSintesis:`<p><b>3 IE de Koppitz</b> (tamaño pequeño, línea fina, segunda tentativa): con 3 o más el resultado es significativo, y también lo es para quienes toman 2 o más de 8 a 10 años. A eso se suma la constricción como dato complementario.</p><p><b>Constelación:</b> inhibición, timidez, retraimiento y ansiedad.</p><p><b>Tiempo:</b> 11' 20''. El último rango normado (9 a 9½ años) es de 4 a 8 minutos, así que lo tomamos como referencia. Ejecutó lento, lo que sugiere perfeccionismo o esfuerzo por compensar; coincide con la goma y el "¿está bien así?".</p>`},
+ dfh:{fino:true,fig:{cx:38,top:20,H:46,sw:.3,amp:.12,hair:'largo',eyes:'puntos',mouth:'linea',neck:true,body:'vestido',waist:.62,shoulder:.9,hip:1.7,legW:.4,legGap:.55,feet:'zapatos',arms:'pegados',armW:.32,ghost:true},
+  items:{cabeza:1,ojos:1,pupilas:0,cejas:0,nariz:1,fosas:0,boca:1,dosLabios:0,orejas:0,pelo:1,cuello:1,cuerpo:1,brazos:1,brazos2d:1,brazosHombro:1,brazosAbajo:1,codo:0,manos:0,dedos:0,dedosCorrectos:0,piernas:1,piernas2d:1,rodilla:0,pies:1,pies2d:1,perfil:0,proporciones:0,ropa1:0,ropa2:1,ropa4:0},
+  alto:'≈ 4,6 cm',
+  ie:['pequena','brazosPegados','manosOmitidas'],
+  intro:`<p>Tardó 9 minutos y borró la cabeza tres veces (todavía se ven los contornos anteriores). Al terminar contó: <i>"Es una nena de mi edad. Está en el patio de la escuela esperando que la vengan a buscar. Está sola. ¿Qué siente? No sé… nada."</i></p><p>Las mismas tres pasadas: <b>estructura y estilo</b>, <b class="r">ítems evolutivos</b> e <b class="b">indicadores emocionales</b>.</p>`,
+  tamano:`<p>Mide <b>≈ 4,6 cm</b> en una hoja de 29,7 cm: el tamaño es <b>pequeño</b> (menos de 1/3 de la hoja).</p><p><b>Lectura:</b> sentimientos de inferioridad e inseguridad, retraimiento, posible tono depresivo.</p><p class="small">También es el IE "figura pequeña" (5 cm o menos).</p>`,
+  emplaz:`<p>Está <b>arriba a la izquierda</b>, pegada al margen. El emplazamiento superior se asocia a refugio en la fantasía y distancia del entorno. La lectura del lado izquierdo cambia según el autor, así que no conviene apoyarse en ella. Junto con el tamaño, la figura se achica y se aleja.</p>`,
+  trazo:`<p><b>Presión débil</b> y trazo fino y esbozado, con <b>borrado</b> repetido en la cabeza (quedan los contornos anteriores).</p><p><b>Lectura:</b> bajo nivel de energía, timidez, inhibición. El borrado habla de autocrítica e inseguridad, igual que la goma en el Bender.</p>`,
+  detalles:`<p><b>Simetría rígida</b> y figura <b>sin movimiento</b>: brazos pegados al cuerpo, piernas rectas. Los <b>detalles son escasos</b>.</p><p><b>Lectura:</b> control rígido, inhibición.</p>`,
+  estilo:`<p>Estilo <b>esquemático, prolijo y estereotipado</b> ("nena de vestido"), estático. Es correcto, pero no tiene vida.</p>`,
+  restoNota:`<p class="small">Están todos los esperados. Faltan las manos, pero <b>las manos no son ítem esperado</b> a los 10 años, así que no restan. Sí cuentan como IE, como veremos en la tercera pasada.</p>`,
+  excNota:`<p class="small">Pies en dos dimensiones y brazos unidos al hombro no suman: a los 10 años ya no son excepcionales para niñas.</p>`,
+  calcNota:`<p><b>Relación con el CI.</b> El rango 85–120 es una estimación gruesa (Koppitz reporta correlaciones de 0,45 a 0,80 con el WISC). Converge con el excelente rendimiento escolar. El motivo de consulta es emocional: no hace falta un WISC para responderlo, salvo que lo pida la escuela.</p>`,
+  ieTxt:{pequena:'Mide 4,6 cm: 5 cm o menos.',brazosPegados:'Los brazos quedan adheridos a los costados del vestido, sin espacio entre brazo y cuerpo.',manosOmitidas:'Los brazos terminan cerrados, sin manos ni dedos.'},
+  ieSintesis:`<p><b>3 IE</b> (2 o más): altamente sugestivo de problemas emocionales y de relaciones interpersonales insatisfactorias.</p><p><b>Constelación:</b> inseguridad y retraimiento (figura pequeña), control rígido y dificultad para conectarse (brazos pegados), inadecuación y culpa (manos omitidas). Se suma el contenido: una nena sola, esperando que la vengan a buscar.</p>`},
+ integ:{
+  rows:[
+   ['Maduración visomotora','Desarrollo normal, alumna ejemplar.','2 errores, dentro de la norma para 10-0 a 10-5. EMPM 9-0 a 9-11, con efecto techo.','Esperados completos; figura bien integrada.'],
+   ['Capacidad intelectual estimada','Muy buen rendimiento escolar.','Sin indicadores de lesión.','Puntaje 5: normal a normal alto, CI estimado 85–120.'],
+   ['Inhibición y retraimiento','Monosílabos, voz baja, no levanta la mano, una sola amiga, no va a cumpleaños.','Tamaño pequeño, línea fina, constricción.','Figura pequeña, presión débil, emplazamiento superior, brazos pegados.'],
+   ['Ansiedad y autoexigencia','Llora con un 8, rehace la tarea, dolores de panza.',"Segunda tentativa, tiempo 11' 20'', pide la goma.",'Borrado reiterado, simetría rígida.'],
+   ['Duelo, pérdida y culpa','Muerte de la abuela que la cuidaba; madre en duelo; "¿nos vamos a morir?".','—','Manos omitidas (culpa, inadecuación); "sola, esperando que la vengan a buscar".']],
+  hip:`<p>Niña de 10 años 2 meses con una <b>maduración visomotora y una capacidad intelectual estimada acordes a su edad</b>. El área comprometida es la <b>emocional</b>: un cuadro de <b>ansiedad con inhibición, retraimiento y autoexigencia</b> que se expresa también en el cuerpo (dolores abdominales).</p><p>Aparece en el contexto de un <b>duelo reciente no elaborado</b> por la abuela que la cuidaba, con una madre también en duelo. La figura "sola, esperando que la vengan a buscar" condensa el temor a la pérdida y la ansiedad de separación.</p>`,
+  sug:['Espacio terapéutico para Sofía, con foco en el duelo y la ansiedad.','Orientación a los padres; sugerir un espacio propio para la madre.','Trabajo con la escuela para bajar la presión de la evaluación.','Interconsulta con la pediatra para seguir los síntomas somáticos.'],
+  modelo:`<p>"Sofía obtiene en el Test de Bender un puntaje de 2 errores, que corresponde a una edad de maduración perceptivo-motriz de 9-0 a 9-11 años. El puntaje se encuentra dentro de lo esperable para su grupo de edad (10-0 a 10-5) y debe leerse teniendo en cuenta el efecto techo de la prueba a esta edad. Presenta 3 indicadores emocionales (tamaño pequeño, línea fina y segunda tentativa), a los que se agrega la constricción en el uso de la hoja, que sugieren timidez, retraimiento y ansiedad. En el DFH obtiene un puntaje de 5, que ubica su capacidad mental estimada en un nivel normal a normal alto (CI 85–120). Se observan 3 indicadores emocionales (figura pequeña, brazos pegados al cuerpo y manos omitidas) que dan cuenta de inseguridad, control rígido y sentimientos de inadecuación o culpa. Estos datos convergen con lo relatado en la entrevista…"</p>`}
+});
+
+// ---------- Anotaciones del DFH (dependen del dibujo) ----------
+function dfhAnns(cs){
+  const D=cs.dfh,mateo=cs.id==='mateo';
+  const R=k=>D.reg[k];
+  const list=[];
+  list.push({id:'ruler',color:'gray',draw:d=>{const x=mateo?4:d.reg.total[0]+d.reg.total[2]+4;return `<line x1="${x}" y1="${f(d.topY)}" x2="${x}" y2="${f(d.botY)}"/><line x1="${x-2}" y1="${f(d.topY)}" x2="${x+2}" y2="${f(d.topY)}"/><line x1="${x-2}" y1="${f(d.botY)}" x2="${x+2}" y2="${f(d.botY)}"/>`+txt(x+3,(d.topY+d.botY)/2,D.alto,'start')}});
+  list.push({id:'grid',color:'gray',draw:()=>`<line x1="70" y1="0" x2="70" y2="297"/><line x1="140" y1="0" x2="140" y2="297"/><line x1="0" y1="99" x2="210" y2="99"/><line x1="0" y1="198" x2="210" y2="198"/>`+(mateo?txt(105,150,'centro','middle'):txt(72,40,'superior izquierdo','start'))});
+  list.push({id:'trazo',color:'blue',draw:d=>mateo?ringLabeled(d.reg.manoD,'presión fuerte',{side:'above',pad:2}):ringLabeled(d.reg.cabeza,'borrado · trazo fino',{side:'right',pad:2.2})});
+  list.push({id:'mov',color:'blue',draw:d=>mateo?ringLabeled(d.reg.brazos,'brazos hacia afuera',{side:'above',pad:2}):ringLabeled(union([d.reg.brazos,d.reg.cuerpo]),'rígida · sin movimiento',{side:'right',pad:1.5})});
+  const gr=(k,lbl,side)=>ringLabeled(R(k),'✓ '+lbl,{side:side||'right',pad:mateo?2:.6});
+  list.push({id:'base',color:'green',draw:()=>gr('cabeza','cabeza','left')+gr('ojos','ojos')+gr('nariz','nariz')+gr('boca','boca')+gr('cuerpo','cuerpo','left')+gr('piernas','piernas','right')});
+  if(mateo){
+    list.push({id:'resto',color:'green',draw:()=>gr('brazos','brazos · 2D','above')+gr('pelo','pelo','above')+ringLabeled(R('piernas'),'',{pad:3})+txt(R('piernas')[0]+R('piernas')[2]+6,R('piernas')[1]+20,'✓ piernas 2D','start')});
+    list.push({id:'restoOm',color:'red',draw:()=>ringLabeled(R('pies'),'✗ pies (−1)',{side:'below',pad:2})});
+  }else{
+    list.push({id:'resto',color:'green',draw:()=>gr('pelo','pelo','left')+gr('cuello','cuello')+ringLabeled(R('brazos'),'✓ brazos 2D, hacia abajo',{side:'right',pad:.6})+gr('pies','pies','below')});
+  }
+  if(mateo){
+    list.push({id:'ie-grande',color:'blue',draw:d=>{const x=4;return `<line x1="${x}" y1="${f(d.topY)}" x2="${x}" y2="${f(d.botY)}"/>`+txt(x+3,d.topY+14,'≥ 23 cm','start')}});
+    list.push({id:'ie-dientes',color:'blue',draw:()=>ringLabeled(R('boca'),'dientes',{side:'right',pad:2})});
+    list.push({id:'ie-brazosLargos',color:'blue',draw:d=>`<line x1="20" y1="${f(d.reg.rodillaY)}" x2="190" y2="${f(d.reg.rodillaY)}" style="stroke-dasharray:6 5"/>`+txt(108,d.reg.rodillaY-3,'rodillas','middle')+ringLabeled(d.reg.manoI,'',{pad:2})+ringLabeled(d.reg.manoD,'debajo de la rodilla',{side:'below',pad:2})});
+    list.push({id:'ie-manosGrandes',color:'blue',draw:()=>ringLabeled(R('manoI'),'',{pad:1})+ringLabeled(R('manoD'),'',{pad:1})+ringLabeled(R('cabeza'),'mano ≈ cara',{side:'right',pad:1})});
+  }else{
+    list.push({id:'ie-pequena',color:'blue',draw:d=>{const x=d.reg.total[0]+d.reg.total[2]+4;return `<line x1="${x}" y1="${f(d.topY)}" x2="${x}" y2="${f(d.botY)}"/>`+txt(x+3,(d.topY+d.botY)/2,'≤ 5 cm','start')}});
+    list.push({id:'ie-brazosPegados',color:'blue',draw:()=>ringLabeled(R('brazos'),'pegados al cuerpo',{side:'right',pad:.6})});
+    list.push({id:'ie-manosOmitidas',color:'blue',draw:()=>ringLabeled(R('manos'),'sin manos',{side:'below',pad:.5})});
+  }
+  return list;
+}
+
+// ---------- Generación de pasos ----------
+function benderSteps(cs){
+  const B=cs.bender,fig=k=>B.figs.find(F=>F.key===k),st=[];let tally=0,ei=0;
+  st.push({eye:'Protocolo completo',title:'Primera mirada a la hoja',html:B.intro,zoom:null,focus:null,show:[],tally,ei});
+  ORDER.forEach(k=>{const keys=B.figs.filter(F=>F.fig===k).map(F=>F.key);const errs=B.errors.filter(e=>e.fig===k);tally+=errs.length;const N=B.notes[k];
+    const v=errs.length?errs.map(e=>verdict('err','+1 · ítem '+e.item,`<b>${e.cat}.</b> ${e.crit}`)).join(''):verdict('ok','0','Ningún ítem de esta figura se computa.');
+    st.push({eye:'Figura '+k,title:N.t,html:`<div class="model-vs"><div>${N.h}</div><div class="mbox">${modelSVG(k)}<span>modelo</span></div></div><div class="verdicts">${v}</div>`,
+      zoom:pad(union(keys.map(q=>fig(q).gb)),10,46),focus:keys,show:errs.map(e=>'e-'+e.item),tally,ei})});
+  const score=tally,g=grupoNorma(cs.ec);
+  st.push({eye:'Puntaje evolutivo',title:`Puntaje bruto: ${score} de 30`,html:`<p>Suma de ítems: ${B.errors.map(e=>'<b class="r">'+e.item+'</b>').join(' + ')} = <b>${score}</b>.</p>${B.total}${empmTable(score)}<p class="small">Tabla gruesa: ${score} errores → ${empmGruesa(score)} años.</p>`,zoom:null,focus:null,show:B.errors.map(e=>'e-'+e.item),tally,ei});
+  st.push({eye:'EMPM vs EC',title:`EMPM ${empm(score)} · EC ${cs.ec.a}-${cs.ec.m}`,html:normChart(score,g)+B.normaTxt,zoom:null,focus:null,show:B.errors.map(e=>'e-'+e.item),tally,ei});
+  B.ei.forEach(x=>{if(!x.comp)ei++;const keys=x.figs.filter(k=>fig(k));
+    st.push({eye:x.comp?'Uso del espacio':'Indicador emocional '+ei,title:x.nombre,html:`<p>${x.txt}</p><div class="verdicts">${verdict(x.comp?'ok':'ei',x.comp?'no suma':'IE '+ei,`<b>Criterio:</b> ${x.crit}<br><b>Edad:</b> ${x.edad}<br><b>Significado:</b> ${x.sig}`)}</div>`,
+      zoom:keys.length>=8?null:pad(union(keys.map(k=>fig(k).gb)),14,60),focus:keys.length>=8?null:keys,show:['i-'+x.id],tally,ei})});
+  st.push({eye:'Síntesis emocional',title:'Lo que dicen los indicadores',html:B.eiSintesis,zoom:null,focus:null,show:B.ei.map(x=>'i-'+x.id),tally,ei});
+  return st;
+}
+function dfhSteps(cs){
+  const D=cs.dfh,sc=dfhScore(cs),nv=dfhNivel(sc.score),st=[],reg=D.reg,mateo=cs.id==='mateo';
+  const T=reg.total,fz=pad(T,mateo?14:8,mateo?60:40);
+  const h={om:null,ex:null,sc:null,ie:null};
+  const push=(o,hh)=>st.push(Object.assign({focus:null,show:[],zoom:null},o,{hud:Object.assign({},hh)}));
+  push({eye:'Hoja completa',title:'Primera mirada',html:D.intro},h);
+  push({eye:'Estructura · tamaño',title:'¿Cuánto ocupa?',html:D.tamano,show:['ruler']},h);
+  push({eye:'Estructura · emplazamiento',title:'¿Dónde está en la hoja?',html:D.emplaz,show:['grid']},h);
+  push({eye:'Estructura · presión y trazo',title:'¿Cómo es la línea?',html:D.trazo,show:['trazo'],zoom:mateo?pad(union([reg.manoD,reg.brazos]),8):pad(reg.cabeza,8,24)},h);
+  push({eye:'Estructura · simetría, detalles, movimiento',title:'¿Qué destaca?',html:D.detalles,show:['mov'],zoom:fz},h);
+  push({eye:'Estilo',title:'Estilo gráfico global',html:D.estilo,zoom:fz},h);
+  const baseKeys=sc.esp.filter(k=>BASE.includes(k)),restKeys=sc.esp.filter(k=>!BASE.includes(k));
+  push({eye:'Ítems evolutivos · esperados',title:`Esperados para ${cs.sexo==='v'?'varones':'niñas'} de ${sc.age} años (${sc.esp.length})`,html:`<p>Koppitz lista ${sc.esp.length} ítems esperados para esta edad y sexo. Empezamos por los 6 de base.</p>${itemsTable(baseKeys,D.items,'esp')}`,show:['base'],zoom:fz},h);
+  h.om=sc.omit.length;
+  push({eye:'Ítems evolutivos · esperados',title:sc.omit.length?`Falta ${sc.omit.length}: ${sc.omit.map(k=>ITEMS[k].toLowerCase()).join(', ')}`:'Están todos',html:`${itemsTable(restKeys,D.items,'esp')}<p>Esperados omitidos: <b class="r">${sc.omit.length}</b>.</p>${D.restoNota}`,show:mateo?['resto','restoOm']:['resto'],zoom:fz},h);
+  h.ex=sc.pres.length;
+  push({eye:'Ítems evolutivos · excepcionales',title:`Excepcionales presentes: ${sc.pres.length}`,html:`<p>Excepcionales para ${cs.sexo==='v'?'varones':'niñas'} de ${sc.age} años: ${sc.exc.map(k=>ITEMS[k].toLowerCase()).join(', ')}.</p>${itemsTable(sc.exc,D.items,'exc')}${D.excNota}`,zoom:fz},h);
+  h.sc=sc.score;
+  push({eye:'Puntaje DFH',title:`5 − ${sc.omit.length} + ${sc.pres.length} = ${sc.score}`,html:`<p>Fórmula de Koppitz: <span class="mono">5 − esperados omitidos + excepcionales presentes</span>. Se parte de 5 para evitar puntajes negativos.</p>${convTable(sc.score)}<p>Puntaje <b>${sc.score}</b>: <b>${nv[2]}</b>, CI estimado <b>${nv[3]}</b>.</p>${D.calcNota}`},h);
+  h.ie=0;
+  D.ie.forEach(id=>{const x=ieDfh(id);h.ie++;const min=cs.sexo==='v'?x[3]:x[4];
+    const z=id==='grande'||id==='pequena'?null:id==='dientes'?pad(reg.cabeza,mateo?20:6,30):fz;
+    push({eye:'Indicador emocional '+h.ie+' · '+x[2].toLowerCase(),title:x[1],html:`<p>${D.ieTxt[id]}</p><div class="verdicts">${verdict('ei','IE '+h.ie,`${x[5]?'<b>Criterio:</b> '+x[5]+'<br>':''}<b>Validez:</b> ${min?'desde los '+min+' años':'todas las edades'} (${cs.nombre} tiene ${cs.ec.a}: ${ieValido(id,cs)?'vale':'no vale'})<br><b>Significado:</b> ${x[6]}`)}</div>`,show:['ie-'+id],zoom:z},h)});
+  push({eye:'Síntesis emocional',title:'Lo que dicen los indicadores',html:D.ieSintesis,show:D.ie.map(id=>'ie-'+id)},h);
+  return st;
+}
+
+// ---------- Render de un caso ----------
+function renderCase(cs){
+  const root=document.getElementById('case-'+cs.id);
+  cs.dfh.anns=dfhAnns(cs);
+  const bsvg=buildBender(cs),dsvg=buildDFH(cs);
+  const bst=benderSteps(cs),dst=dfhSteps(cs);
+  const sc=dfhScore(cs),nv=dfhNivel(sc.score),bscore=cs.bender.errors.length,g=grupoNorma(cs.ec),eiN=cs.bender.ei.filter(x=>!x.comp).length;
+  const stepsHTML=arr=>arr.map((s,i)=>`<div class="step${i===0?' is-active':''}" data-i="${i}"><div class="card"><div class="eyebrow">${s.eye}</div><h4>${s.title}</h4><div class="body">${s.html}</div></div></div>`).join('');
+  const bDev=bscore>g[3]+g[4]?'por encima de +1 DS':'dentro de ±1 DS';
+  root.innerHTML=`
+   <div class="case-head"><div><div class="eyebrow">Caso ${cs.header.n}</div><h2>${cs.nombre} <em>· ${cs.ec.a}-${cs.ec.m}</em></h2></div><div class="chips">${cs.header.chips.map(c=>`<span class="chip">${c}</span>`).join('')}</div></div>
+
+   <div class="part-title"><span class="eyebrow">Parte 1</span><h3>Entrevista</h3></div>
+   <div class="interview"><div class="transcript">${cs.entrevista}</div>
+     <div class="clues"><div class="eyebrow">Pistas para el análisis</div>${cs.pistas.map(p=>`<div class="clue"><span class="chip ${p[0]} tag">${p[1]}</span><div>${p[2]}</div></div>`).join('')}</div></div>
+
+   <div class="part-title"><span class="eyebrow">Parte 2</span><h3>Bender-Koppitz, figura por figura</h3></div>
+   <div class="scrolly" data-kind="bender">
+     <div class="stage"><div class="hud"><span class="chip red">Evolutivo <b data-h="tally">0</b>/30</span><span class="chip blue">IE <b data-h="ei">0</b></span><span class="chip">EC ${cs.ec.a}-${cs.ec.m}</span></div><div class="board">${bsvg}</div><div class="cap">Lámina esquemática para practicar · lápiz rojo: ítem evolutivo · lápiz azul: IE</div></div>
+     <div class="steps">${stepsHTML(bst)}</div>
+   </div>
+   <div class="results">
+     <div class="tile red"><div class="k">Puntaje evolutivo</div><div class="v">${bscore}<small style="font-size:16px">/30</small></div><div class="s">${cs.bender.errors.map(e=>e.item).join(' · ')}</div></div>
+     <div class="tile"><div class="k">EMPM</div><div class="v">${empm(bscore)}</div><div class="s">tabla de equivalentes de edad</div></div>
+     <div class="tile"><div class="k">EC · norma</div><div class="v">${cs.ec.a}-${cs.ec.m}</div><div class="s">${g[2]}: ${String(g[3]).replace('.',',')} ± ${String(g[4]).replace('.',',')} · ${bDev}</div></div>
+     <div class="tile blue"><div class="k">Indicadores emocionales</div><div class="v">${eiN}</div><div class="s">${cs.bender.ei.filter(x=>!x.comp).map(x=>x.nombre.split(' (')[0]).join(' · ')}</div></div>
+   </div>
+
+   <div class="part-title"><span class="eyebrow">Parte 3</span><h3>Dibujo de la Figura Humana</h3></div>
+   <div class="scrolly" data-kind="dfh">
+     <div class="stage"><div class="hud"><span class="chip red">Esperados omitidos <b data-h="om">—</b></span><span class="chip green">Excepcionales <b data-h="ex">—</b></span><span class="chip">Puntaje <b data-h="sc">—</b></span><span class="chip blue">IE <b data-h="ie">—</b></span></div><div class="board">${dsvg}</div><div class="cap">${cs.sexo==='v'?'Varón':'Niña'} · ${cs.ec.a} años · tabla de Koppitz para ${sc.age} años</div></div>
+     <div class="steps">${stepsHTML(dst)}</div>
+   </div>
+   <div class="results">
+     <div class="tile"><div class="k">Estructura</div><div class="v" style="font-size:22px">${cs.id==='mateo'?'Grande · fuerte':'Pequeña · débil'}</div><div class="s">${cs.id==='mateo'?'central, trazo reforzado, expansiva':'superior izquierda, trazo fino, borrado, rígida'}</div></div>
+     <div class="tile red"><div class="k">Puntaje DFH</div><div class="v">${sc.score}</div><div class="s">5 − ${sc.omit.length} + ${sc.pres.length}</div></div>
+     <div class="tile"><div class="k">Nivel · CI estimado</div><div class="v" style="font-size:22px">${nv[2]}</div><div class="s">CI ${nv[3]}</div></div>
+     <div class="tile blue"><div class="k">Indicadores emocionales</div><div class="v">${cs.dfh.ie.length}</div><div class="s">${cs.dfh.ie.map(id=>ieDfh(id)[1]).join(' · ')}</div></div>
+   </div>
+
+   <div class="part-title"><span class="eyebrow">Parte 4</span><h3>Integración</h3></div>
+   <div class="tbl-wrap"><table class="conv"><thead><tr><th>Área</th><th>Entrevista</th><th>Bender</th><th>DFH</th></tr></thead><tbody>${cs.integ.rows.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div>
+   <div class="grid2" style="margin-top:18px">
+     <div class="hyp"><div class="eyebrow">Hipótesis diagnóstica</div>${cs.integ.hip}</div>
+     <div class="panel"><h4>Sugerencias</h4><ul>${cs.integ.sug.map(s=>`<li>${s}</li>`).join('')}</ul></div>
+   </div>
+   <div style="margin-top:18px"><div class="eyebrow" style="margin-bottom:8px">Cómo lo escribirías en el parcial</div><blockquote class="model">${cs.integ.modelo}</blockquote></div>`;
+  root.querySelectorAll('.scrolly').forEach(el=>setupScrolly(el,el.dataset.kind==='bender'?bst:dst));
+}
+
+// ---------- Scrollytelling ----------
+const reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const narrow=window.matchMedia('(max-width: 860px)');
+function setupScrolly(root,steps){
+  const svg=root.querySelector('svg.sheetsvg'),stepEls=[...root.querySelectorAll('.step')],hud=root.querySelector('.hud');
+  let cur=FULL.slice(),target=FULL.slice(),anim=null,active=-1;
+  function fit(b){const r=svg.getBoundingClientRect();const cw=r.width||400,ch=r.height||500;let [x,y,w,h]=b;const a=cw/ch;if(w/h<a){const nw=h*a;x-=(nw-w)/2;w=nw}else{const nh=w/a;y-=(nh-h)/2;h=nh}return [x,y,w,h]}
+  function apply(vb){svg.setAttribute('viewBox',vb.map(f).join(' '));const r=svg.getBoundingClientRect();const px=(r.width||400)/vb[2];svg.style.setProperty('--fs',f(15/px)+'px')}
+  function zoomTo(b){target=fit(b||FULL);if(reduce){cur=target;apply(cur);return}const from=cur.slice(),t0=performance.now(),dur=650;cancelAnimationFrame(anim);
+    const tick=t=>{const k=Math.min(1,(t-t0)/dur),e=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;cur=from.map((v,i)=>v+(target[i]-v)*e);apply(cur);if(k<1)anim=requestAnimationFrame(tick)};anim=requestAnimationFrame(tick)}
+  function activate(i){if(i===active)return;active=i;const s=steps[i];stepEls.forEach((el,j)=>el.classList.toggle('is-active',j===i));
+    svg.querySelectorAll('.ann').forEach(a=>a.classList.toggle('on',s.show.includes(a.dataset.ann)));
+    svg.classList.toggle('dim',!!s.focus);svg.querySelectorAll('[data-fig]').forEach(g=>g.classList.toggle('focus',!!s.focus&&s.focus.includes(g.dataset.fig)));
+    if(s.hud){Object.keys(s.hud).forEach(k=>{const el=hud.querySelector(`[data-h="${k}"]`);if(el)el.textContent=s.hud[k]==null?'—':s.hud[k]})}
+    else{hud.querySelector('[data-h="tally"]').textContent=s.tally;hud.querySelector('[data-h="ei"]').textContent=s.ei}
+    zoomTo(s.zoom)}
+  let io;
+  function observe(){if(io)io.disconnect();io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)activate(+e.target.dataset.i)})},{rootMargin:narrow.matches?'-66% 0px -28% 0px':'-46% 0px -50% 0px'});stepEls.forEach(el=>io.observe(el))}
+  observe();narrow.addEventListener?narrow.addEventListener('change',observe):0;
+  activate(0);apply(fit(FULL));cur=fit(FULL);
+  window.addEventListener('resize',()=>{cur=fit(steps[active].zoom||FULL);apply(cur)});
+}
+
+// ---------- Tablas de consulta ----------
+function renderRefs(){
+  const items=[['A','1a','Distorsión','Círculo y/o cuadrado excesivamente achatados o deformados (un eje el doble del otro); adición u omisión de ángulos'],['A','1b','Desproporción','Uno de los dos es el doble de grande que el otro'],['A','2','Rotación','45° o más'],['A','3','Integración','Círculo y vértice separados o superpuestos más de 3 mm'],
+   ['1','4','Distorsión','5 o más puntos convertidos en círculos'],['1','5','Rotación','45° o más'],['1','6','Perseveración','Más de 15 puntos en una hilera'],
+   ['2','7','Rotación','45° o más'],['2','8','Integración','Omite o agrega hileras; usa la hilera de la Fig. 1; 4 o más círculos en la mayoría de las columnas'],['2','9','Perseveración','Más de 14 columnas'],
+   ['3','10','Distorsión','5 o más puntos convertidos en círculos'],['3','11','Rotación','Eje rotado 45° o más'],['3','12a','Integración','Desintegración: hileras que no aumentan, flecha irreconocible o invertida, puntos conglomerados, una sola hilera'],['3','12b','Integración','Línea continua en lugar de puntos'],
+   ['4','13','Rotación','45° o más, de la figura o de una parte'],['4','14','Integración','Curva y ángulo separados o superpuestos más de 3 mm; la curva toca ambas esquinas'],
+   ['5','15','Distorsión','5 o más puntos convertidos en círculos'],['5','16','Rotación','45° o más de la figura, o extensión que apunta hacia la izquierda'],['5','17a','Integración','Desintegración: puntos conglomerados, recta o círculo en lugar de arco, extensión que atraviesa el arco'],['5','17b','Integración','Línea continua en lugar de puntos'],
+   ['6','18a','Distorsión','3 o más curvas sustituidas por ángulos'],['6','18b','Distorsión','Ninguna curva en una o ambas líneas'],['6','19','Integración','No se cruzan, se cruzan en el extremo o se entrelazan'],['6','20','Perseveración','6 o más sinusoides completas'],
+   ['7','21a','Desproporción','Un hexágono al menos el doble del otro'],['7','21b','Distorsión','Hexágonos deformados; ángulos agregados u omitidos'],['7','22','Rotación','45° o más'],['7','23','Integración','No se superponen, o uno atraviesa completamente al otro'],
+   ['8','24','Distorsión','Hexágono o rombo deformados; ángulos agregados u omitidos'],['8','25','Rotación','45° o más']];
+  const ie=[['Orden confuso','Figuras desparramadas sin secuencia','8–10 años','Planificación pobre, confusión'],['Línea ondulada (Figs. 1 y 2)','2 o más cambios abruptos de dirección','5–7 años','Inestabilidad motora y emocional'],['Círculos sustituidos por rayas (Fig. 2)','La mitad o más','—','Impulsividad, falta de atención'],['Aumento progresivo de tamaño (Figs. 1, 2, 3)','Los últimos elementos son 3 veces o más los primeros','—','Baja tolerancia a la frustración, explosividad'],['Gran tamaño','Un tercio más grande que el modelo en ambas direcciones','—','Acting-out'],['Tamaño pequeño','La mitad del modelo en ambas direcciones','8–10 años','Ansiedad, retraimiento, timidez'],['Línea fina','Cuesta ver el dibujo','—','Timidez, retraimiento'],['Repaso del dibujo o de los trazos','Líneas reforzadas, impulsivas','5–7 años','Impulsividad, agresividad'],['Segunda tentativa','Abandona y rehace en otro lugar','8–10 años','Impulsividad, ansiedad'],['Expansión','2 o más hojas','Todas','Impulsividad, acting-out'],['Encuadramiento','Encierra figuras en recuadros','—','Pobre autocontrol, búsqueda de límites'],['Elaboración espontánea','Agrega elementos al modelo','—','Temores, ansiedad, débil contacto con la realidad']];
+  const ages=[5,6,7,8,9,10,11,12];
+  const espRow=sx=>ages.map(a=>`<tr><td class="mono">${a}</td><td>${ESP[sx][a].map(k=>ITEMS[k]).join(', ')}</td><td>${EXC[sx][a].map(k=>ITEMS[k]).join(', ')}</td></tr>`).join('');
+  const groups=['Signos cualitativos','Detalles especiales','Omisiones'];
+  document.getElementById('refTables').innerHTML=`
+   <details class="ref"><summary>Bender · los 30 ítems evolutivos de Koppitz</summary><div><div class="tbl-wrap"><table><thead><tr><th>Fig.</th><th>Ítem</th><th>Tipo</th><th>Se computa si…</th></tr></thead><tbody>${items.map(r=>`<tr><td class="mono">${r[0]}</td><td class="mono">${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td></tr>`).join('')}</tbody></table></div><p class="small">Rotación: también cuenta si el niño gira la tarjeta. Si gira la hoja para aprovechar el espacio, se anota pero no se computa. En duda, no se computa.</p></div></details>
+   <details class="ref"><summary>Bender · normas de Koppitz y EMPM</summary><div class="grid2"><div class="tbl-wrap"><table><thead><tr><th>Edad</th><th>Media</th><th>DS</th><th>±1 DS</th></tr></thead><tbody>${NORMS.map(n=>`<tr><td class="mono">${n[2]}</td><td class="mono">${String(n[3]).replace('.',',')}</td><td class="mono">${String(n[4]).replace('.',',')}</td><td class="mono">${String(Math.max(0,n[3]-n[4]).toFixed(1)).replace('.',',')}–${String((n[3]+n[4]).toFixed(1)).replace('.',',')}</td></tr>`).join('')}</tbody></table></div>${empmTable(-1)}</div><p class="small">Tiempo esperable (±1 DS): 5 años, 3–10 min · 5½, 4–10 · 6 a 8½, 4–9 · 9 a 9½, 4–8. La fila 8-6 a 8-11 figura como 2,5 o 2,25 según la fuente.</p></div></details>
+   <details class="ref"><summary>Bender · los 12 indicadores emocionales</summary><div><div class="tbl-wrap"><table><thead><tr><th>IE</th><th>Criterio</th><th>Edad significativa</th><th>Significado</th></tr></thead><tbody>${ie.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div><p class="small">Umbral: 3 o más IE (algunas fuentes toman 2 o más de 8 a 10 años). Con "—" no hay una edad específica informada.</p></div></details>
+   <details class="ref"><summary>DFH · ítems esperados y excepcionales por edad</summary><div><h4 style="margin:6px 0">Varones</h4><div class="tbl-wrap"><table><thead><tr><th>Edad</th><th>Esperados</th><th>Excepcionales</th></tr></thead><tbody>${espRow('v')}</tbody></table></div><h4 style="margin:14px 0 6px">Niñas</h4><div class="tbl-wrap"><table><thead><tr><th>Edad</th><th>Esperados</th><th>Excepcionales</th></tr></thead><tbody>${espRow('n')}</tbody></table></div>${convTable(-99)}</div></details>
+   <details class="ref"><summary>DFH · los 30 indicadores emocionales</summary><div>${groups.map(gname=>`<h4 style="margin:10px 0 6px">${gname}</h4><div class="tbl-wrap"><table><thead><tr><th>IE</th><th>Criterio</th><th>Vale desde</th><th>Significado</th></tr></thead><tbody>${IE_DFH.filter(x=>x[2]===gname).map(x=>`<tr><td>${x[1]}</td><td>${x[5]||'—'}</td><td class="mono">${x[3]||x[4]?`V ${x[3]||'todas'} · N ${x[4]||'todas'}`:'todas'}</td><td>${x[6]}</td></tr>`).join('')}</tbody></table></div>`).join('')}<p class="small">Umbral: 2 o más IE. Los IE reflejan actitudes y ansiedades actuales y se interpretan en conjunto. V = varones, N = niñas.</p></div></details>`;
+}
+
+// ---------- Inicio ----------
+document.getElementById('heroCards').innerHTML=ORDER.map(k=>`<figure>${modelSVG(k)}<figcaption>${k==='A'?'Fig. A':'Fig. '+k}</figcaption></figure>`).join('');
+CASES.forEach(renderCase);
+renderRefs();
+</script>
+
+</body>
+</html>
