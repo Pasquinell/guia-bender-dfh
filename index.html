@@ -484,6 +484,7 @@ function wob(pts,amp,closed){
     for(let k=(i===0?0:1);k<=n;k++){const t=k/n;d=d*.55+J(amp);out.push([x1+(x2-x1)*t+nx*d,y1+(y2-y1)*t+ny*d])}}
   return 'M'+out.map(p=>f(p[0])+' '+f(p[1])).join(' L');
 }
+function spline(P,n){const out=[];for(let i=0;i<P.length-1;i++){const p0=P[i-1]||P[i],p1=P[i],p2=P[i+1],p3=P[i+2]||P[i+1];for(let k=0;k<n;k++){const t=k/n,t2=t*t,t3=t2*t;out.push([0,1].map(j=>.5*((2*p1[j])+(-p0[j]+p2[j])*t+(2*p0[j]-5*p1[j]+4*p2[j]-p3[j])*t2+(-p0[j]+3*p1[j]-3*p2[j]+p3[j])*t3)))}}out.push(P[P.length-1]);return out}
 function ellPts(cx,cy,rx,ry,a0,turn){const N=Math.max(14,Math.round((rx+ry)*3));const pts=[];const T=turn||1.05;for(let i=0;i<=N;i++){const a=a0+i/N*Math.PI*2*T;pts.push([cx+Math.cos(a)*rx,cy+Math.sin(a)*ry])}return pts}
 function wcirc(cx,cy,rx,ry,amp){return wob(ellPts(cx,cy,rx,ry,RNG()*6.28),amp)}
 
@@ -495,16 +496,20 @@ function benderFig(id,o,c){
   const D=(x,y)=>{X(x,y,dr);return `<circle class="dot" cx="${f(x+J(a*.3))}" cy="${f(y+J(a*.3))}" r="${f(dr)}"/>`};
   const C=(x,y,rx,ry)=>{ry=ry||rx;X(x,y,Math.max(rx,ry));return `<path class="ln" d="${wcirc(x,y,rx,ry,a*Math.min(1,rx/3))}" stroke-width="${f(sw)}"/>`};
   let s='';
-  if(id==='A'){const g=o.gap||0;s+=C(9,10,8,8*(o.flat||1));s+=L([[17+g,10],[27+g,0],[37+g,10],[27+g,20]],true)}
+  if(id==='A'){const g=o.gap||0;s+=C(10,11,10,10*(o.flat||1));s+=L([[20+g,11],[30+g,1],[40+g,11],[30+g,21]],true)}
   if(id==='1'){let x=2,pr=0;for(let i=0;i<12;i++){const circ=o.circFrom!=null&&i>=o.circFrom;const r=circ?(o.r0||.9)+(i-o.circFrom)*(o.grow||0):dr;if(i>0)x+=2.6+pr+r;pr=r;s+=circ?C(x,4,r):D(x,4)}}
-  if(id==='2'){for(let i=0;i<11;i++)for(let j=0;j<3;j++){const x=2+i*4.6+j*1.7,y=2+j*3.8;if(o.dashFrom!=null&&i>=o.dashFrom)s+=L([[x-1.3,y-.5],[x+1.3,y+.4]]);else s+=C(x,y,1.05)}}
-  if(id==='3'){const cn=o.counts||[1,3,5,7];cn.forEach((n,k)=>{const rc=o.rc?o.rc[k]:0;const xk=2+k*7.5;const vs=3.1+rc*1.1;for(let j=0;j<n;j++){const m=j-(n-1)/2;const x=xk+Math.abs(m)*1.3,y=12+m*vs;s+=rc?C(x,y,rc):D(x,y)}})}
-  if(id==='4'){const g=o.gap||0;s+=L([[0,2],[0,16],[14,16],[14,2]]);const pts=[];for(let i=0;i<=26;i++){const t=i/26;const u=g+24*t,h=10*Math.pow(Math.sin(Math.PI*t),1.2);pts.push([14+.7071*u+.7071*h,16+.7071*u-.7071*h])}s+=L(pts)}
-  if(id==='5'){const rr=o.circ?1:0;for(let k=0;k<19;k++){const an=Math.PI-k*Math.PI/18;const x=15+13*Math.cos(an),y=30-13*Math.sin(an);s+=rr?C(x,y,rr):D(x,y)}for(let i=1;i<=7;i++){const x=15+i*2.6*.5,y=17-i*2.6*.866;s+=rr?C(x,y,rr):D(x,y)}}
-  if(id==='6'){let h=[];if(o.angular){for(let k=0;k<=16;k++){const x=k*3.25;h.push([x,16+3.2*Math.sin(2*Math.PI*x/13)])}}else{for(let x=0;x<=52;x+=.8)h.push([x,16+3.2*Math.sin(2*Math.PI*x/13)])}s+=L(h);const v=[];for(let y=0;y<=34;y+=.8)v.push([22-(y-17)*.3+2.8*Math.sin(2*Math.PI*y/13),y]);s+=L(v)}
-  if(id==='7'){const H=(cx,cy,deg,drop,partial)=>{const t=deg*Math.PI/180;let p=[[0,-15],[5,-9],[5,9],[0,15],[-5,9],[-5,-9]].map(([x,y])=>[cx+x*Math.cos(t)-y*Math.sin(t),cy+x*Math.sin(t)+y*Math.cos(t)]);if(drop!=null)p.splice(drop,1);return partial?L(p.slice(0,4)):L(p,true)};
-    if(o.partial)s+=H(8,17,0,null,true);else{s+=H(8,17,0);s+=o.sep?H(27,19,55,o.drop):H(19,19,55,o.drop)}}
-  if(id==='8'){s+=L([[0,7],[7,0],[45,0],[52,7],[45,14],[7,14]],true);s+=L([[26,0],[31,7],[26,14],[21,7]],true)}
+  if(id==='2'){for(let i=0;i<11;i++)for(let j=0;j<3;j++){const x=2+i*4.6+j*.8,y=2+j*2.6;if(o.dashFrom!=null&&i>=o.dashFrom)s+=L([[x-1.3,y-.4],[x+1.3,y+.3]]);else s+=C(x,y,.8)}}
+  if(id==='3'){const cn=o.counts||[1,3,5,7];cn.forEach((n,k)=>{const rc=o.rc?o.rc[k]:0;const xk=4+k*11;const vs=3.2+rc*1.1;for(let j=0;j<n;j++){const m=j-(n-1)/2;const x=xk-Math.abs(m)*1.6,y=12+m*vs;s+=rc?C(x,y,rc):D(x,y)}})}
+  if(id==='4'){const g=o.gap||0,ox=14+g*.7071,oy=16+g*.7071;s+=L([[0,3],[0,16],[14,16],[14,3]]);
+    const P=[[17.9,-7.4],[17.6,-5.3],[16.2,-3.4],[12.5,-3.7],[8.1,-4.1],[3.7,-2.6],[.6,-.2],[-1.3,2],[-1.9,4.7],[-1.2,8],[.5,11.5],[2.2,15],[2.8,17.6],[1.6,19.4]];
+    s+=L(spline(P,6).map(([x,y])=>[ox+x,oy+y]))}
+  if(id==='5'){const rr=o.circ?1:0;for(let k=0;k<19;k++){const an=(198-k*12)*Math.PI/180;const x=15+13*Math.cos(an),y=26-13*Math.sin(an);s+=rr?C(x,y,rr):D(x,y)}
+    const a0=66*Math.PI/180,sx=15+13*Math.cos(a0),sy=26-13*Math.sin(a0);for(let i=1;i<=7;i++){const x=sx+i*2.4*.574,y=sy-i*2.4*.819;s+=rr?C(x,y,rr):D(x,y)}}
+  if(id==='6'){let h=[];if(o.angular){for(let k=0;k<=17;k++){const x=k*3.075;h.push([x,15+1.8*Math.sin(2*Math.PI*x/12.3)])}}else{for(let x=0;x<=52;x+=.6)h.push([x,15+1.8*Math.sin(2*Math.PI*x/12.3)])}s+=L(h);
+    const v=[];for(let t=-15;t<=15;t+=.5){const w=1.3*Math.sin(2*Math.PI*t/7.5);v.push([30+t*.469+w*.883,15-t*.883+w*.469])}s+=L(v)}
+  if(id==='7'){const H=(cx,cy,deg,drop,partial)=>{const t=deg*Math.PI/180;let p=[[0,-15],[5,-8],[5,9],[0,15],[-5,9],[-5,-8]].map(([x,y])=>[cx+x*Math.cos(t)-y*Math.sin(t),cy+x*Math.sin(t)+y*Math.cos(t)]);if(drop!=null)p.splice(drop,1);return partial?L(p.slice(0,4)):L(p,true)};
+    if(o.partial)s+=H(14,22,25,null,true);else{s+=H(24,16,-10,o.drop);s+=o.sep?H(5,24,25):H(14,22,25)}}
+  if(id==='8'){s+=L([[0,5],[11,0],[41,0],[52,5],[41,10],[11,10]],true);s+=L([[26,0],[29.5,5],[26,10],[22.5,5]],true)}
   return {s,box:[x0,y0,x1-x0,y1-y0]};
 }
 function modelSVG(id){return withSeed(97+id.charCodeAt(0),()=>{const r=benderFig(id,{},{s:1,sw:.6,amp:.03});const b=r.box;return `<svg viewBox="${f(b[0]-3)} ${f(b[1]-3)} ${f(b[2]+6)} ${f(b[3]+6)}" role="img" aria-label="Modelo figura ${id}">${r.s}</svg>`})}
@@ -696,21 +701,21 @@ CASES.push({
    A:{t:'Círculo y cuadrado no se tocan',h:`<p>La copia está agrandada (×1,5). Las formas están bien logradas: el círculo no está achatado (no hay 1a) y las dos partes guardan su proporción (no hay 1b). No hay rotación (no hay 2). Pero entre el círculo y el vértice del cuadrado quedan unos 7,5 mm.</p>`},
    '1':{t:'Los puntos se vuelven círculos',h:`<p>Los primeros 5 elementos son puntos; desde el 6.º se convierten en <b>círculos cada vez más grandes</b> (7 círculos). Son 12 elementos, así que no hay perseveración (haría falta más de 15). La hilera es horizontal: no hay rotación.</p>`},
    '2':{t:'Sin error evolutivo, pero con rayas',h:`<p>Hay 11 columnas de 3, sin hileras agregadas ni omitidas (no hay 8), sin perseveración (no pasa de 14 columnas) y sin rotación (no hay 7). Desde la 4.ª columna dibuja <b>rayas en lugar de círculos</b>. Eso <b>no es un error evolutivo</b>: lo anotamos para los IE.</p>`},
-   '3':{t:'La cabeza de flecha se desarma',h:`<p>El modelo tiene columnas de 1, 3, 5 y 7 puntos. Mateo hace <b>1, 3, 4 y 4</b>, y casi todos los puntos son círculos que crecen. <i>Ojo: un número incorrecto de puntos, por sí solo, no se computa.</i> Acá sí hay error porque las últimas dos columnas son iguales: las hileras dejan de aumentar.</p>`},
+   '3':{t:'La cabeza de flecha se desarma',h:`<p>El modelo tiene columnas de 1, 3, 5 y 7 puntos, cada una en forma de punta de flecha que mira a la derecha. Mateo hace <b>1, 3, 4 y 4</b>, y casi todos los puntos son círculos que crecen. <i>Ojo: un número incorrecto de puntos, por sí solo, no se computa.</i> Acá sí hay error porque las últimas dos columnas son iguales: las hileras dejan de aumentar.</p>`},
    '4':{t:'La curva se separa del cuadrado',h:`<p>La curva queda a unos 5,4 mm del ángulo del cuadrado. No hay rotación.</p>`},
    '5':{t:'Arco y extensión con círculos',h:`<p>La forma del arco y la extensión se reconoce (no hay 17a), sin línea continua (no hay 17b) y sin rotación (no hay 16). Pero los puntos son <b>círculos</b>.</p>`},
    '6':{t:'Curvas que se vuelven ángulos',h:`<p>La línea horizontal es un zigzag: <b>las curvas están sustituidas por ángulos</b>. La vertical conserva las curvas. Las dos líneas se cruzan bien (no hay 19) y hay 4 ondas, así que no hay perseveración (haría falta 6 o más).</p>`},
-   '7':{t:'Al hexágono le falta un ángulo',h:`<p>La copia está agrandada (×1,4). Los hexágonos se superponen bien (no hay 23) y sin rotación (no hay 22). Pero el hexágono inclinado quedó de <b>5 lados</b>.</p>`},
+   '7':{t:'Al hexágono le falta un ángulo',h:`<p>La copia está agrandada (×1,4). Los hexágonos se superponen bien (no hay 23) y sin rotación (no hay 22). Pero el hexágono vertical (el de la derecha) quedó de <b>5 lados</b>.</p>`},
    '8':{t:'Bien copiada, mal ubicada',h:`<p>El hexágono y el rombo están bien formados y no hay rotación: no hay error evolutivo. Mateo la ubicó <b>arriba, en el medio de la hoja</b>, después de haber terminado abajo. Eso se ve en los IE.</p>`}},
   errors:[
-   {item:'3',fig:'A',cat:'Integración',crit:'Círculo y vértice separados más de 3 mm.',draw:fig=>{const F=fig('A');const a=toG(F,17,10),b=toG(F,22,10);return ringLabeled(lb(F,[15,5,9,10]),'',{pad:2})+measure(a[0],a[1],b[0],b[1],'3 · ≈7,5 mm',a[0]-3,a[1]+12)}},
+   {item:'3',fig:'A',cat:'Integración',crit:'Círculo y vértice separados más de 3 mm.',draw:fig=>{const F=fig('A');const a=toG(F,20,11),b=toG(F,25,11);return ringLabeled(lb(F,[18,6,9,10]),'',{pad:2})+measure(a[0],a[1],b[0],b[1],'3 · ≈7,5 mm',a[0]-3,a[1]+12)}},
    {item:'4',fig:'1',cat:'Distorsión',crit:'5 o más puntos convertidos en círculos (acá, 7).',draw:fig=>{const F=fig('1');return ringLabeled(lb(F,[24,0,46,8]),'4 · círculos',{side:'below'})}},
-   {item:'10',fig:'3',cat:'Distorsión',crit:'5 o más puntos convertidos en círculos (acá, 11).',draw:fig=>{const F=fig('3');return ringLabeled(lb(F,[7,0,24,24]),'10 · círculos',{side:'left'})}},
-   {item:'12a',fig:'3',cat:'Integración',crit:'Desintegración: las hileras no aumentan sucesivamente (1-3-4-4).',draw:fig=>{const F=fig('3');let s='';[[2,'1'],[9.5,'3'],[17,'4'],[24.5,'4']].forEach(([x,n])=>{const p=toG(F,x+1.5,-1);s+=txt(p[0],p[1],n,'middle')});const p=toG(F,30,27);return s+txt(p[0],p[1]+3,'12a · 1-3-4-4','end')}},
+   {item:'10',fig:'3',cat:'Distorsión',crit:'5 o más puntos convertidos en círculos (acá, 11).',draw:fig=>{const F=fig('3');return ringLabeled(lb(F,[8,0,31,24]),'10 · círculos',{side:'left'})}},
+   {item:'12a',fig:'3',cat:'Integración',crit:'Desintegración: las hileras no aumentan sucesivamente (1-3-4-4).',draw:fig=>{const F=fig('3');let s='';[[2.5,'1'],[12,'3'],[22,'4'],[32,'4']].forEach(([x,n])=>{const p=toG(F,x+1.5,-1);s+=txt(p[0],p[1],n,'middle')});const p=toG(F,38,27);return s+txt(p[0],p[1]+3,'12a · 1-3-4-4','end')}},
    {item:'14',fig:'4',cat:'Integración',crit:'Curva y ángulo separados más de 3 mm.',draw:fig=>{const F=fig('4');const a=toG(F,14,16),b=toG(F,17.2,19.2);return measure(a[0],a[1],b[0],b[1],'14 · ≈5,4 mm',a[0]-30,a[1]+10)}},
-   {item:'15',fig:'5',cat:'Distorsión',crit:'5 o más puntos convertidos en círculos.',draw:fig=>{const F=fig('5');return ringLabeled(lb(F,[1,15,28,17]),'15 · círculos',{side:'right'})}},
-   {item:'18a',fig:'6',cat:'Distorsión',crit:'3 o más curvas sustituidas por ángulos.',draw:fig=>{const F=fig('6');return ringLabeled(lb(F,[0,11,52,10]),'18a · ángulos',{side:'below'})}},
-   {item:'21b',fig:'7',cat:'Distorsión',crit:'Hexágono deformado: ángulos omitidos (quedó de 5 lados).',draw:fig=>{const F=fig('7');return ringLabeled(lb(F,[8,9,23,20]),'21b · 5 lados',{side:'right'})}}],
+   {item:'15',fig:'5',cat:'Distorsión',crit:'5 o más puntos convertidos en círculos.',draw:fig=>{const F=fig('5');return ringLabeled(lb(F,[1,12,28,19]),'15 · círculos',{side:'right'})}},
+   {item:'18a',fig:'6',cat:'Distorsión',crit:'3 o más curvas sustituidas por ángulos.',draw:fig=>{const F=fig('6');return ringLabeled(lb(F,[0,12,52,6]),'18a · ángulos',{side:'below'})}},
+   {item:'21b',fig:'7',cat:'Distorsión',crit:'Hexágono deformado: ángulos omitidos (quedó de 5 lados).',draw:fig=>{const F=fig('7');return ringLabeled(lb(F,[16,0,16,32]),'21b · 5 lados',{side:'right'})}}],
   total:`<p>En la tabla de equivalentes de edad, 8 errores corresponden a una <b>EMPM de 6-0 a 6-5</b>. En la tabla gruesa, "6 a 6½": las dos tablas coinciden.</p>`,
   normaTxt:`<p>Mateo tiene 8-4, así que se compara con el grupo 8-0 a 8-5: media 3,7, DS 3,60. Lo esperable es entre 0,1 y 7,3 errores. Con 8 queda <b>por encima de +1 DS</b>: comete más errores que lo esperable para su edad.</p><p><b>Lectura madurativa:</b> EMPM de alrededor de 6 años con EC de 8-4. Es un <b>desfasaje de unos 2 años</b> en la maduración visomotora.</p><p><b>¿Lesión?</b> No aparecen indicadores altamente significativos de lesión: no hay rotaciones en las Figs. 1, 4 u 8, ni perseveración, ni línea continua en lugar de puntos, ni hileras omitidas en la Fig. 2. Los errores que predominan (puntos convertidos en círculos, uniones fallidas) son típicamente madurativos, propios de niños más chicos.</p>`,
   ei:[
@@ -718,10 +723,10 @@ CASES.push({
     txt:'Arranca arriba a la izquierda, salta a la derecha, vuelve a la izquierda y termina poniendo la 8 arriba al centro. El recorrido (en azul) no sigue ninguna secuencia. <i>Excepción de Koppitz: no se computa si la Fig. 8 va arriba por falta de espacio.</i> Acá había lugar abajo (unos 4 cm libres debajo de la Fig. 7), así que la excepción no aplica.',
     draw:fig=>{const c=ORDER.map(k=>{const b=fig(k).gb;return [b[0]+b[2]/2,b[1]+b[3]/2]});let s=`<polyline points="${c.map(p=>f(p[0])+','+f(p[1])).join(' ')}" style="stroke-dasharray:6 5"/>`;c.forEach((p,i)=>{s+=`<circle class="num" cx="${f(p[0])}" cy="${f(p[1])}" r="4.2"/><text class="numt" x="${f(p[0])}" y="${f(p[1]+1.6)}" text-anchor="middle">${i+1}</text>`});return s}},
    {id:'rayas',nombre:'Círculos sustituidos por rayas (Fig. 2)',figs:['2'],crit:'La mitad o más de los círculos reemplazados por rayas.',edad:'Sin restricción de edad.',sig:'Impulsividad, falta de interés o de atención.',
-    txt:'24 de los 33 círculos son rayas: más de la mitad.',draw:fig=>{const F=fig('2');return ringLabeled(lb(F,[14,0,41,12]),'rayas: 24/33',{side:'below'})}},
+    txt:'24 de los 33 círculos son rayas: más de la mitad.',draw:fig=>{const F=fig('2');return ringLabeled(lb(F,[14,0,41,8]),'rayas: 24/33',{side:'below'})}},
    {id:'aumento',nombre:'Aumento progresivo de tamaño',figs:['1','3'],crit:'Los últimos elementos son al menos 3 veces más grandes que los primeros (Figs. 1, 2 o 3).',edad:'Pesa más cuanto mayor es el niño.',sig:'Baja tolerancia a la frustración, explosividad.',
     txt:'En la Fig. 1, el último círculo mide unos 6 mm contra 2 mm del primer punto: el triple. En la Fig. 3 pasa lo mismo. Se computa <b>una sola vez</b> aunque aparezca en dos figuras.',
-    draw:fig=>{const F1=fig('1'),F3=fig('3');return ringLabeled(lb(F1,[0,-1,72,10]),'×3',{side:'right'})+ringLabeled(lb(F3,[0,0,32,24]),'×3',{side:'left'})}},
+    draw:fig=>{const F1=fig('1'),F3=fig('3');return ringLabeled(lb(F1,[0,-1,72,10]),'×3',{side:'right'})+ringLabeled(lb(F3,[0,0,40,24]),'×3',{side:'left'})}},
    {id:'grande',nombre:'Gran tamaño',figs:['A','7','8'],crit:'Una o más figuras un tercio más grandes que el modelo en ambas direcciones.',edad:'Sin restricción de edad.',sig:'Conducta acting-out: actuar hacia afuera.',
     txt:'La A (×1,5), la 7 (×1,4) y la 8 (×1,35) superan en un tercio (×1,33) al modelo. La 6 (×1,3) no llega.',
     draw:fig=>['A','7','8'].map(k=>{const F=fig(k);return ringLabeled(pad(F.gb,1),'×'+String(F.s).replace('.',','),{side:k==='7'?'right':'below',pad:3})}).join('')}],
@@ -800,7 +805,7 @@ CASES.push({
    '8':{t:'Sin error',h:`<p>El hexágono y el rombo están bien formados.</p>`}},
   errors:[
    {item:'14',fig:'4',cat:'Integración',crit:'Curva y ángulo separados más de 3 mm.',draw:fig=>{const F=fig('4');const a=toG(F,14,16),b=toG(F,19.7,21.7);return measure(a[0],a[1],b[0],b[1],'14 · ≈4,4 mm',a[0]+2,a[1]+10)}},
-   {item:'23',fig:'7',cat:'Integración',crit:'Los hexágonos no se superponen.',draw:fig=>{const F=fig('7');return ringLabeled(lb(F,[9,15,9,14]),'23 · no se superponen',{side:'below',pad:1.2})}}],
+   {item:'23',fig:'7',cat:'Integración',crit:'Los hexágonos no se superponen.',draw:fig=>{const F=fig('7');return ringLabeled(lb(F,[11,9,7,12]),'23 · no se superponen',{side:'below',pad:1.2})}}],
   total:`<p>En la tabla de equivalentes de edad, 2 errores corresponden a una <b>EMPM de 9-0 a 9-11</b>. En la tabla gruesa, "9 a 10". Algunos protocolos ponen 9-0 a 9-5.</p>`,
   normaTxt:`<p>Sofía tiene 10-2, así que se compara con el grupo 10-0 a 10-5: media 1,6, DS 1,67. Lo esperable es entre 0 y 3,3 errores. Con 2 queda <b>dentro de la norma</b>.</p><p><b>Efecto techo:</b> desde los 9 años el Bender ya no discrimina bien, porque casi todos los niños cometen pocos errores. A los 10 solo sería significativo un rendimiento por debajo del nivel de 9 años. Que la EMPM dé "9 y pico" con una EC de 10-2 <b>no es un retraso</b>.</p><p><b>Lectura madurativa:</b> maduración visomotora acorde a su edad, sin indicadores de lesión.</p>`,
   ei:[
